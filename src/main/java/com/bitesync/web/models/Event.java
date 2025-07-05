@@ -11,14 +11,16 @@ public class Event {
 
     @MongoId
     private String id;
+    private String authorID;
     private String author;
     private String name;
     private String dateAndTime;
     private String description;
     private List<List<String>> recipes;
 
-    public Event(String author, String name, String dateAndTime, String description, List<List<String>> recipes) {
+    public Event(String authorID, String author, String name, String dateAndTime, String description, List<List<String>> recipes) {
         super();
+        this.authorID = authorID;
         this.author = author;
         this.name = name;
         this.dateAndTime = dateAndTime;
@@ -32,6 +34,10 @@ public class Event {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getAuthorID() {
+        return authorID;
     }
 
     public String getAuthor() {

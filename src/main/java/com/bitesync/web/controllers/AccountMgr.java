@@ -1,5 +1,6 @@
 package com.bitesync.web.controllers;
 
+import com.bitesync.web.models.Account;
 import com.bitesync.web.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,8 +17,8 @@ public class AccountMgr {
     @Autowired
     private AccountService service;
 
-    @PutMapping("/username/{id}")
-    public ResponseEntity<String> editUsername(@PathVariable String id, @RequestBody String username) {
+    @PutMapping("/username")
+    public ResponseEntity<String> editUsername(@RequestBody String id, @RequestBody String username) {
         // IF THERE IS ALREADY AN ACCOUNT UNDER THIS EMAIL.
         // SERVE THE INVALID MESSAGE.
         if(service.getAccount(username) != null) {
@@ -34,8 +35,8 @@ public class AccountMgr {
         return new ResponseEntity<>("Account updated: " + id, HttpStatus.OK);
     }
 
-    @PutMapping("/password/{id}")
-    public ResponseEntity<String> editPassword(@PathVariable String id, @RequestBody List<String> securityAnswers, @RequestBody String password) {
+    @PutMapping("/password")
+    public ResponseEntity<String> editPassword(@RequestBody String id, @RequestBody List<String> securityAnswers, @RequestBody String password) {
 
         for(String securityAnswer : securityAnswers){
             if(securityAnswer.length() > 128 || securityAnswer.isEmpty()) {
@@ -57,8 +58,8 @@ public class AccountMgr {
         return new ResponseEntity<>("Account updated: " + id, HttpStatus.OK);
     }
 
-    @PutMapping("/tags/{id}")
-    public ResponseEntity<String> editTags(@PathVariable String id, @RequestBody List<String> tags) {
+    @PutMapping("/tags")
+    public ResponseEntity<String> editTags(@RequestBody String id, @RequestBody List<String> tags) {
 
         for (String tag : tags) {
             if (tag.length() > 32) {
@@ -74,5 +75,24 @@ public class AccountMgr {
 
         System.out.println("TAGS SAVED.");
         return new ResponseEntity<>("Account updated: " + id, HttpStatus.OK);
+    }
+
+    @GetMapping("/info")
+    public ResponseEntity<Account> viewAccount(@RequestBody String id) {
+        Account info = service.getAccountInfo(id);
+        if(info == null) {
+            System.out.println("ACCOUNT NOT FOUND");
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
+        System.out.println("ACCOUNT FOUND");
+        return new ResponseEntity<>(info, HttpStatus.OK);
+    }
+
+    // SERVE ALL EXISTING ACCOUNTS.
+    @GetMapping("/all")
+    public ResponseEntity<List<Account>> viewAccounts() {
+        System.out.println("LOADING ALL ACCOUNTS.");
+        return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
     }
 }

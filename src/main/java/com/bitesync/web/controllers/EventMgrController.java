@@ -19,10 +19,16 @@ public class EventMgrController {
     // TO THE DATABASE MANAGER TO SAVE INTO THE DATABASE.
     @PostMapping("/create")
     public ResponseEntity<String> createEvent(@RequestBody Event event) {
+        String authorID = event.getAuthorID();
         String author = event.getAuthor();
         String name = event.getName();
         String dateTime = event.getDateAndTime();
         String description = event.getDescription();
+
+        if(authorID.isEmpty()) {
+            System.out.println("INVALID AUTHOR ID.");
+            return new ResponseEntity<>("Invalid author ID.", HttpStatus.NOT_ACCEPTABLE);
+        }
 
         if(author.isEmpty() || author.length() > 128){
             System.out.println("INVALID AUTHOR NAME.");
@@ -51,12 +57,17 @@ public class EventMgrController {
         return new ResponseEntity<>("Event created: " + id, HttpStatus.CREATED);
     }
 
-    @PutMapping("/edit/{id}")
-    public ResponseEntity<String> editEvent(@PathVariable String id, @RequestBody Event event) {
+    @PutMapping("/edit")
+    public ResponseEntity<String> editEvent(@RequestBody String accountID, @RequestBody String eventID, @RequestBody Event event) {
         String author = event.getAuthor();
         String name = event.getName();
         String dateTime = event.getDateAndTime();
         String description = event.getDescription();
+
+        if(accountID.isEmpty()) {
+            System.out.println("INVALID AUTHOR ID.");
+            return new ResponseEntity<>("Invalid author ID.", HttpStatus.NOT_ACCEPTABLE);
+        }
 
         if(author.isEmpty() || author.length() > 128){
             System.out.println("INVALID AUTHOR NAME.");
@@ -75,25 +86,23 @@ public class EventMgrController {
             return new ResponseEntity<>("Recipe created.", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        if(service.updateEvent(id, event) == null){
+        if(service.updateEvent(accountID, eventID, event) == null){
             System.out.println("FAILED TO SAVE EVENT.");
             return new ResponseEntity<>("Failed to update event.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         System.out.println("EVENT SAVED.");
-        return new ResponseEntity<>("Event updated: " + id, HttpStatus.OK);
+        return new ResponseEntity<>("Event updated: " + eventID, HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteEvent(@PathVariable String id) {
-        service.removeEvent(id);
-
-        if(service.getEvent(id) != null) {
-            System.out.println("FAILED TO DELETE EVENT.");
-            return new ResponseEntity<>("Failed to remove event.", HttpStatus.INTERNAL_SERVER_ERROR);
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteEvent(@RequestBody String accountID, @RequestBody String eventID) {
+        if(service.removeEvent(accountID, eventID)) {
+            System.out.println("EVENT DELETED.");
+            return new ResponseEntity<>("Event removed: " + eventID, HttpStatus.OK);
         }
 
-        System.out.println("EVENT DELETED.");
-        return new ResponseEntity<>("Event removed: " + id, HttpStatus.OK);
+        System.out.println("FAILED TO DELETE EVENT.");
+        return new ResponseEntity<>("Failed to remove event.", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

@@ -18,13 +18,26 @@ public class EventService {
         return events.save(event);
     }
 
-    public Event updateEvent(String id, Event event) {
-        event.setId(id);
-        return events.save(event);
+    public Event updateEvent(String accountID, String eventID, Event event) {
+        Event auth = events.findById(eventID).orElse(null);
+        if(auth == null)
+            return null;
+        if(auth.getAuthorID().equals(accountID)) {
+            event.setId(eventID);
+            return events.save(event);
+        }
+        return null;
     }
 
-    public void removeEvent(String id) {
-        events.deleteById(id);
+    public boolean removeEvent(String accountID, String eventID) {
+        Event auth = events.findById(eventID).orElse(null);
+        if(auth == null)
+            return false;
+        if(auth.getAuthorID().equals(accountID)) {
+            events.deleteById(eventID);
+            return true;
+        }
+        return false;
     }
 
     public Event getEvent(String id) {

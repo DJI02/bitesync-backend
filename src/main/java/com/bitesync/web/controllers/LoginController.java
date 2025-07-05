@@ -120,11 +120,4 @@ public class LoginController {
             return new ResponseEntity<>("Invalid email or password.", HttpStatus.UNAUTHORIZED);
         }
     }
-
-    // SERVE ALL EXISTING ACCOUNTS.
-    @GetMapping("/all")
-    public ResponseEntity<List<Account>> viewAccounts() {
-        System.out.println("LOADING ALL ACCOUNTS.");
-        return new ResponseEntity<>(service.getAll(), HttpStatus.OK);
-    }
 }

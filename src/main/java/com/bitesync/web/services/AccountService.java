@@ -31,8 +31,16 @@ public class AccountService {
         return accounts.findByEmail(email);
     }
 
-    public Account recallAccount(String id) {
-        return accounts.findById(id).orElse(null);
+    public Account getAccountInfo(String id) {
+        // RECALL ACTUAL ACCOUNT FROM DATABASE
+        Account account = accounts.findById(id).orElse(null);
+        if(account == null)
+            return null;
+
+        // COPY NON-SENSITIVE INFO TO SECONDARY ACCOUNT OBJECT
+        Account info = new Account(account.getEmail(), null, account.getSecQ(), null);
+        info.setTags(account.getTags());
+        return info;
     }
 
     public List<Account> getAll() {
@@ -52,7 +60,7 @@ public class AccountService {
         if(account == null)
             return null;
         if(account.verifySecA(secA)){
-            account.setPassword(password);
+            account.setPassword(passwordEncoder.encode(password));
             return accounts.save(account);
         }
         return null;

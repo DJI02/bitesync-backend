@@ -20,11 +20,17 @@ public class RecipeMgrController {
     // TO THE DATABASE MANAGER TO SAVE INTO THE DATABASE.
     @PostMapping("/create")
     public ResponseEntity<String> createRecipe(@RequestBody Recipe recipe) {
+        String authorID = recipe.getAuthorID();
         String author = recipe.getAuthor();
         String name = recipe.getName();
         String ingredients = recipe.getIngredients();
         String instructions = recipe.getInstructions();
         List<String> tags = recipe.getTags();
+
+        if(authorID.isEmpty()) {
+            System.out.println("INVALID AUTHOR ID.");
+            return new ResponseEntity<>("Invalid author ID.", HttpStatus.NOT_ACCEPTABLE);
+        }
 
         if(author.isEmpty() || author.length() > 128){
             System.out.println("INVALID AUTHOR.");
@@ -59,13 +65,18 @@ public class RecipeMgrController {
         return new ResponseEntity<>("Recipe created: " + id, HttpStatus.CREATED);
     }
 
-    @PutMapping("/edit/{id}")
-    public ResponseEntity<String> editRecipe(@PathVariable String id, @RequestBody Recipe recipe) {
+    @PutMapping("/edit")
+    public ResponseEntity<String> editRecipe(@RequestBody String accountID, @RequestBody String recipeID, @RequestBody Recipe recipe) {
         String author = recipe.getAuthor();
         String name = recipe.getName();
         String ingredients = recipe.getIngredients();
         String instructions = recipe.getInstructions();
         List<String> tags = recipe.getTags();
+
+        if(accountID.isEmpty()) {
+            System.out.println("INVALID AUTHOR ID.");
+            return new ResponseEntity<>("Invalid author ID.", HttpStatus.NOT_ACCEPTABLE);
+        }
 
         if(author.isEmpty() || author.length() > 128){
             System.out.println("INVALID AUTHOR.");
@@ -90,25 +101,23 @@ public class RecipeMgrController {
             }
         }
 
-        if(service.updateRecipe(id, recipe) == null) {
+        if(service.updateRecipe(accountID, recipeID, recipe) == null) {
             System.out.println("FAILED TO SAVE RECIPE.");
             return new ResponseEntity<>("Failed to update recipe.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         System.out.println("RECIPE SAVED.");
-        return new ResponseEntity<>("Recipe updated: " + id, HttpStatus.OK);
+        return new ResponseEntity<>("Recipe updated: " + recipeID, HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteRecipe(@PathVariable String id) {
-        service.removeRecipe(id);
-
-        if(service.getRecipe(id) != null) {
-            System.out.println("FAILED TO DELETE RECIPE.");
-            return new ResponseEntity<>("Failed to delete recipe.", HttpStatus.INTERNAL_SERVER_ERROR);
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteRecipe(@RequestBody String accountID, @RequestBody String recipeID) {
+        if(service.removeRecipe(accountID, recipeID)) {
+            System.out.println("RECIPE DELETED.");
+            return new ResponseEntity<>("Recipe removed: " + recipeID, HttpStatus.OK);
         }
 
-        System.out.println("RECIPE DELETED.");
-        return new ResponseEntity<>("Recipe removed: " + id, HttpStatus.OK);
+        System.out.println("FAILED TO DELETE RECIPE.");
+        return new ResponseEntity<>("Failed to delete recipe.", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

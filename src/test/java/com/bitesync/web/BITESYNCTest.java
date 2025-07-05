@@ -130,37 +130,37 @@ class BITESYNCTest {
     @Test
     void createRecipe_TC1() {
         //all valid
-        Recipe recipeTC1 = new Recipe(validAuthor, validName, validIngredients, validInstructions, validTag);
+        Recipe recipeTC1 = new Recipe("", validAuthor, validName, validIngredients, validInstructions, validTag);
         assertThat(recipeMgrTestController.createRecipe(recipeTC1)).isEqualTo("Recipe created.");
     }
     @Test
     void createRecipe_TC2() {
         //tag invalid
-        Recipe recipeTC2 = new Recipe(validAuthor, validName , validIngredients, validInstructions, invalidTag);
+        Recipe recipeTC2 = new Recipe("", validAuthor, validName , validIngredients, validInstructions, invalidTag);
         assertThat(recipeMgrTestController.createRecipe(recipeTC2)).isEqualTo("Invalid details.");
     }
     @Test
     void createRecipe_TC3() {
         //instruction invalid
-        Recipe recipeTC3 = new Recipe(validAuthor, validName , validIngredients, invalidInstructions, validTag);
+        Recipe recipeTC3 = new Recipe("", validAuthor, validName , validIngredients, invalidInstructions, validTag);
         assertThat(recipeMgrTestController.createRecipe(recipeTC3)).isEqualTo("Invalid details.");
     }
     @Test
     void createRecipe_TC4() {
         //instruction invalid
-        Recipe recipeTC4 = new Recipe(validAuthor, validName , invalidIngredients, validInstructions, validTag);
+        Recipe recipeTC4 = new Recipe("", validAuthor, validName , invalidIngredients, validInstructions, validTag);
         assertThat(recipeMgrTestController.createRecipe(recipeTC4)).isEqualTo("Invalid details.");
     }
     @Test
     void createRecipe_TC5() {
         //name invalid
-        Recipe recipeTC5 = new Recipe(validAuthor, invalidName , validIngredients, validInstructions, validTag);
+        Recipe recipeTC5 = new Recipe("", validAuthor, invalidName , validIngredients, validInstructions, validTag);
         assertThat(recipeMgrTestController.createRecipe(recipeTC5)).isEqualTo("Invalid details.");
     }
     @Test
     void createRecipe_TC6() {
         //author invalid
-        Recipe recipeTC6 = new Recipe(invalidAuthor, validName , validIngredients, validInstructions, validTag);
+        Recipe recipeTC6 = new Recipe("", invalidAuthor, validName , validIngredients, validInstructions, validTag);
         assertThat(recipeMgrTestController.createRecipe(recipeTC6)).isEqualTo("Invalid details.");
     }
 
@@ -171,31 +171,31 @@ class BITESYNCTest {
     @Test
     void createEvent_TC1() {
         //all valid
-        Event eventTC1 = new Event(validAuthor, validEventName, validDateTime, validDescription, dummyRecipe);
+        Event eventTC1 = new Event("", validAuthor, validEventName, validDateTime, validDescription, List.of(dummyRecipe));
         assertThat(eventMgrTestController.createEvent(eventTC1)).isEqualTo("Event created.");
     }
     @Test
     void createEvent_TC2() {
         //description invalid
-        Event eventTC2 = new Event(validAuthor, validEventName, validDateTime, invalidDescription, dummyRecipe);
+        Event eventTC2 = new Event("", validAuthor, validEventName, validDateTime, invalidDescription, List.of(dummyRecipe));
         assertThat(eventMgrTestController.createEvent(eventTC2)).isEqualTo("Invalid details.");
     }
     @Test
     void createEvent_TC3() {
         //dateTime invalid
-        Event eventTC4 = new Event(validAuthor, validEventName, invalidDateTime, validDescription, dummyRecipe);
+        Event eventTC4 = new Event("", validAuthor, validEventName, invalidDateTime, validDescription, List.of(dummyRecipe));
         assertThat(eventMgrTestController.createEvent(eventTC4)).isEqualTo("Invalid details.");
     }
     @Test
     void createEvent_TC4() {
         //event name invalid
-        Event eventTC5 = new Event(validAuthor, invalidEventName, validDateTime, validDescription, dummyRecipe);
+        Event eventTC5 = new Event("", validAuthor, invalidEventName, validDateTime, validDescription, List.of(dummyRecipe));
         assertThat(eventMgrTestController.createEvent(eventTC5)).isEqualTo("Invalid details.");
     }
     @Test
     void createEvent_TC5() {
         //author invalid
-        Event eventTC6 = new Event(invalidAuthor, invalidEventName, validDateTime, validDescription, dummyRecipe);
+        Event eventTC6 = new Event("", invalidAuthor, invalidEventName, validDateTime, validDescription, List.of(dummyRecipe));
         assertThat(eventMgrTestController.createEvent(eventTC6)).isEqualTo("Invalid details.");
     }
 }

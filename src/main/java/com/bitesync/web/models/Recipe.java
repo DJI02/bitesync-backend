@@ -11,14 +11,16 @@ public class Recipe {
 
     @MongoId
     private String id;
+    private String authorID;
     private String author;
     private String name;
     private String ingredients;
     private String instructions;
     private List<String> tags;
 
-    public Recipe(String author, String name, String ingredients, String instructions, List<String> tags) {
+    public Recipe(String authorID, String author, String name, String ingredients, String instructions, List<String> tags) {
         super();
+        this.authorID = authorID;
         this.author = author;
         this.name = name;
         this.ingredients = ingredients;
@@ -32,6 +34,10 @@ public class Recipe {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getAuthorID() {
+        return authorID;
     }
 
     public String getAuthor() {
