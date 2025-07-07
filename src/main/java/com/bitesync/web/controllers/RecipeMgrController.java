@@ -66,7 +66,9 @@ public class RecipeMgrController {
     }
 
     @PutMapping("/edit")
-    public ResponseEntity<String> editRecipe(@RequestBody String accountID, @RequestBody String recipeID, @RequestBody Recipe recipe) {
+    public ResponseEntity<String> editRecipe(@RequestBody Recipe recipe) {
+        String accountID = recipe.getAuthorID();
+        String recipeID = recipe.getId();
         String author = recipe.getAuthor();
         String name = recipe.getName();
         String ingredients = recipe.getIngredients();
@@ -111,7 +113,10 @@ public class RecipeMgrController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteRecipe(@RequestBody String accountID, @RequestBody String recipeID) {
+    public ResponseEntity<String> deleteRecipe(@RequestBody Recipe recipe) {
+        String accountID = recipe.getAuthorID();
+        String recipeID = recipe.getId();
+
         if(service.removeRecipe(accountID, recipeID)) {
             System.out.println("RECIPE DELETED.");
             return new ResponseEntity<>("Recipe removed: " + recipeID, HttpStatus.OK);

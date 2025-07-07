@@ -58,7 +58,9 @@ public class EventMgrController {
     }
 
     @PutMapping("/edit")
-    public ResponseEntity<String> editEvent(@RequestBody String accountID, @RequestBody String eventID, @RequestBody Event event) {
+    public ResponseEntity<String> editEvent(@RequestBody Event event) {
+        String accountID = event.getAuthorID();
+        String eventID = event.getId();
         String author = event.getAuthor();
         String name = event.getName();
         String dateTime = event.getDateAndTime();
@@ -96,7 +98,10 @@ public class EventMgrController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteEvent(@RequestBody String accountID, @RequestBody String eventID) {
+    public ResponseEntity<String> deleteEvent(@RequestBody Event event) {
+        String accountID = event.getAuthorID();
+        String eventID = event.getId();
+
         if(service.removeEvent(accountID, eventID)) {
             System.out.println("EVENT DELETED.");
             return new ResponseEntity<>("Event removed: " + eventID, HttpStatus.OK);

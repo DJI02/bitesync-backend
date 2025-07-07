@@ -12,13 +12,16 @@ import java.util.List;
 @RestController
 @CrossOrigin
 @RequestMapping(value = "/account-mgr", produces = "application/json")
-public class AccountMgr {
+public class AccountMgrController {
 
     @Autowired
     private AccountService service;
 
     @PutMapping("/username")
-    public ResponseEntity<String> editUsername(@RequestBody String id, @RequestBody String username) {
+    public ResponseEntity<String> editUsername(@RequestBody Account account) {
+        String id = account.getId();
+        String username = account.getEmail();
+
         // IF THERE IS ALREADY AN ACCOUNT UNDER THIS EMAIL.
         // SERVE THE INVALID MESSAGE.
         if(service.getAccount(username) != null) {
@@ -36,7 +39,10 @@ public class AccountMgr {
     }
 
     @PutMapping("/password")
-    public ResponseEntity<String> editPassword(@RequestBody String id, @RequestBody List<String> securityAnswers, @RequestBody String password) {
+    public ResponseEntity<String> editPassword(@RequestBody Account account) {
+        String id = account.getId();
+        List<String> securityAnswers = account.getSecA();
+        String password = account.getPassword();
 
         for(String securityAnswer : securityAnswers){
             if(securityAnswer.length() > 128 || securityAnswer.isEmpty()) {
@@ -59,7 +65,9 @@ public class AccountMgr {
     }
 
     @PutMapping("/tags")
-    public ResponseEntity<String> editTags(@RequestBody String id, @RequestBody List<String> tags) {
+    public ResponseEntity<String> editTags(@RequestBody Account account) {
+        String id = account.getId();
+        List<String> tags = account.getTags();
 
         for (String tag : tags) {
             if (tag.length() > 32) {
@@ -78,7 +86,7 @@ public class AccountMgr {
     }
 
     @GetMapping("/info")
-    public ResponseEntity<Account> viewAccount(@RequestBody String id) {
+    public ResponseEntity<Account> viewAccount(@RequestParam String id) {
         Account info = service.getAccountInfo(id);
         if(info == null) {
             System.out.println("ACCOUNT NOT FOUND");
