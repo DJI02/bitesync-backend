@@ -22,7 +22,7 @@ public class EventService {
         Event auth = events.findById(eventID).orElse(null);
         if(auth == null)
             return null;
-        if(auth.getAuthorID().equals(accountID)) {
+        if(auth.getAccountID().equals(accountID)) {
             event.setId(eventID);
             return events.save(event);
         }
@@ -33,7 +33,7 @@ public class EventService {
         Event auth = events.findById(eventID).orElse(null);
         if(auth == null)
             return false;
-        if(auth.getAuthorID().equals(accountID)) {
+        if(auth.getAccountID().equals(accountID)) {
             events.deleteById(eventID);
             return true;
         }

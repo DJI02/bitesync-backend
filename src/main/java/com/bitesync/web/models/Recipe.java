@@ -10,17 +10,18 @@ import java.util.List;
 public class Recipe {
 
     @MongoId
-    private String id;
-    private String authorID;
+    private String recipeID;
+
+    private String accountID;
     private String author;
     private String name;
     private String ingredients;
     private String instructions;
     private List<String> tags;
 
-    public Recipe(String authorID, String author, String name, String ingredients, String instructions, List<String> tags) {
+    public Recipe(String accountID, String author, String name, String ingredients, String instructions, List<String> tags) {
         super();
-        this.authorID = authorID;
+        this.accountID = accountID;
         this.author = author;
         this.name = name;
         this.ingredients = ingredients;
@@ -29,15 +30,15 @@ public class Recipe {
     }
 
     public String getId() {
-        return id;
+        return recipeID;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.recipeID = id;
     }
 
-    public String getAuthorID() {
-        return authorID;
+    public String getAccountID() {
+        return accountID;
     }
 
     public String getAuthor() {

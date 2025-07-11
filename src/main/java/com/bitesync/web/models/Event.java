@@ -10,17 +10,18 @@ import java.util.List;
 public class Event {
 
     @MongoId
-    private String id;
-    private String authorID;
+    private String eventID;
+
+    private String accountID;
     private String author;
     private String name;
     private String dateAndTime;
     private String description;
     private List<List<String>> recipes;
 
-    public Event(String authorID, String author, String name, String dateAndTime, String description, List<List<String>> recipes) {
+    public Event(String accountID, String author, String name, String dateAndTime, String description, List<List<String>> recipes) {
         super();
-        this.authorID = authorID;
+        this.accountID = accountID;
         this.author = author;
         this.name = name;
         this.dateAndTime = dateAndTime;
@@ -29,15 +30,15 @@ public class Event {
     }
 
     public String getId() {
-        return id;
+        return eventID;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.eventID = id;
     }
 
-    public String getAuthorID() {
-        return authorID;
+    public String getAccountID() {
+        return accountID;
     }
 
     public String getAuthor() {

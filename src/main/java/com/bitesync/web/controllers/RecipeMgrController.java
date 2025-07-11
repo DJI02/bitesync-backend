@@ -20,14 +20,14 @@ public class RecipeMgrController {
     // TO THE DATABASE MANAGER TO SAVE INTO THE DATABASE.
     @PostMapping("/create")
     public ResponseEntity<String> createRecipe(@RequestBody Recipe recipe) {
-        String authorID = recipe.getAuthorID();
+        String accountID = recipe.getAccountID();
         String author = recipe.getAuthor();
         String name = recipe.getName();
         String ingredients = recipe.getIngredients();
         String instructions = recipe.getInstructions();
         List<String> tags = recipe.getTags();
 
-        if(authorID.isEmpty()) {
+        if(accountID.isEmpty()) {
             System.out.println("INVALID AUTHOR ID.");
             return new ResponseEntity<>("Invalid author ID.", HttpStatus.NOT_ACCEPTABLE);
         }
@@ -67,7 +67,7 @@ public class RecipeMgrController {
 
     @PutMapping("/edit")
     public ResponseEntity<String> editRecipe(@RequestBody Recipe recipe) {
-        String accountID = recipe.getAuthorID();
+        String accountID = recipe.getAccountID();
         String recipeID = recipe.getId();
         String author = recipe.getAuthor();
         String name = recipe.getName();
@@ -114,7 +114,7 @@ public class RecipeMgrController {
 
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteRecipe(@RequestBody Recipe recipe) {
-        String accountID = recipe.getAuthorID();
+        String accountID = recipe.getAccountID();
         String recipeID = recipe.getId();
 
         if(service.removeRecipe(accountID, recipeID)) {

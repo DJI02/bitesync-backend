@@ -10,7 +10,8 @@ import java.util.List;
 public class Account {
 
     @MongoId
-    private String id;
+    private String accountID;
+
     private String email;
     private String password;
     private List<Integer> secQ;
@@ -27,7 +28,7 @@ public class Account {
 
     public String verifyPassword(String password) {
         if(this.password.equals(password))
-            return id;
+            return accountID;
         return null;
     }
 
@@ -36,11 +37,11 @@ public class Account {
     }
 
     public String getId() {
-        return id;
+        return accountID;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.accountID = id;
     }
 
     public String getEmail() {

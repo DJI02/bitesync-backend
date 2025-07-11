@@ -19,13 +19,13 @@ public class EventMgrController {
     // TO THE DATABASE MANAGER TO SAVE INTO THE DATABASE.
     @PostMapping("/create")
     public ResponseEntity<String> createEvent(@RequestBody Event event) {
-        String authorID = event.getAuthorID();
+        String accountID = event.getAccountID();
         String author = event.getAuthor();
         String name = event.getName();
         String dateTime = event.getDateAndTime();
         String description = event.getDescription();
 
-        if(authorID.isEmpty()) {
+        if(accountID.isEmpty()) {
             System.out.println("INVALID AUTHOR ID.");
             return new ResponseEntity<>("Invalid author ID.", HttpStatus.NOT_ACCEPTABLE);
         }
@@ -59,7 +59,7 @@ public class EventMgrController {
 
     @PutMapping("/edit")
     public ResponseEntity<String> editEvent(@RequestBody Event event) {
-        String accountID = event.getAuthorID();
+        String accountID = event.getAccountID();
         String eventID = event.getId();
         String author = event.getAuthor();
         String name = event.getName();
@@ -99,7 +99,7 @@ public class EventMgrController {
 
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteEvent(@RequestBody Event event) {
-        String accountID = event.getAuthorID();
+        String accountID = event.getAccountID();
         String eventID = event.getId();
 
         if(service.removeEvent(accountID, eventID)) {
