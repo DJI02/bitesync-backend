@@ -55,14 +55,14 @@ public class RecipeMgrController {
             }
         }
 
-        String id = service.addRecipe(recipe).getId();
-        if(id.isEmpty()){
+        String recipeID = service.addRecipe(recipe).getId();
+        if(recipeID.isEmpty()){
             System.out.println("FAILED TO SAVE RECIPE.");
             return new ResponseEntity<>("Failed to create recipe.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        System.out.println("RECIPE SAVED.");
-        return new ResponseEntity<>("Recipe created: " + id, HttpStatus.CREATED);
+        System.out.println("RECIPE SAVED: " + recipeID);
+        return new ResponseEntity<>("Recipe created: " + recipeID, HttpStatus.CREATED);
     }
 
     @PutMapping("/edit")
@@ -104,11 +104,11 @@ public class RecipeMgrController {
         }
 
         if(service.updateRecipe(accountID, recipeID, recipe) == null) {
-            System.out.println("FAILED TO SAVE RECIPE.");
-            return new ResponseEntity<>("Failed to update recipe.", HttpStatus.INTERNAL_SERVER_ERROR);
+            System.out.println("FAILED TO SAVE RECIPE: " + recipeID);
+            return new ResponseEntity<>("Failed to update recipe: " + recipeID, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        System.out.println("RECIPE SAVED.");
+        System.out.println("RECIPE SAVED: " + recipeID);
         return new ResponseEntity<>("Recipe updated: " + recipeID, HttpStatus.OK);
     }
 
@@ -118,11 +118,11 @@ public class RecipeMgrController {
         String recipeID = recipe.getId();
 
         if(service.removeRecipe(accountID, recipeID)) {
-            System.out.println("RECIPE DELETED.");
+            System.out.println("RECIPE DELETED: " + recipeID);
             return new ResponseEntity<>("Recipe removed: " + recipeID, HttpStatus.OK);
         }
 
-        System.out.println("FAILED TO DELETE RECIPE.");
-        return new ResponseEntity<>("Failed to delete recipe.", HttpStatus.INTERNAL_SERVER_ERROR);
+        System.out.println("FAILED TO DELETE RECIPE: " + recipeID);
+        return new ResponseEntity<>("Failed to delete recipe: " + recipeID, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

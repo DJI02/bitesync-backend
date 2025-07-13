@@ -26,17 +26,17 @@ public class EventListController {
 
     // SERVE A SPECIFIC EVENT BY ID.
     @PostMapping("/view")
-    public ResponseEntity<Event> viewEvent(@RequestParam String id) {
-        Event event = service.getEvent(id);
+    public ResponseEntity<Event> viewEvent(@RequestParam String eventID) {
+        Event event = service.getEvent(eventID);
 
         // IF NO EVENT MATCHES THE ENTERED ID.
         if(event == null) {
-            System.out.println("EVENT NOT FOUND.");
+            System.out.println("EVENT NOT FOUND: " + eventID);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
         // IF AN EVENT IS FOUND MATCHING THE ENTERED ID.
-        System.out.println("EVENT FOUND.");
+        System.out.println("EVENT FOUND: " + eventID);
         return new ResponseEntity<>(event, HttpStatus.OK);
     }
 }

@@ -1,6 +1,5 @@
 package com.bitesync.web.models;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
@@ -17,6 +16,8 @@ public class Account {
     private List<Integer> secQ;
     private List<String> secA;
     private List<String> tags;
+
+    private List<String> recipes;
 
     public Account(String email, String password, List<Integer> secQ, List<String> secA) {
         super();
@@ -82,5 +83,13 @@ public class Account {
 
     public void setTags(List<String> tags) {
         this.tags = tags;
+    }
+
+    public List<String> getRecipes() {
+        return this.recipes;
+    }
+
+    public void setRecipes(List<String> recipes) {
+        this.recipes = recipes;
     }
 }

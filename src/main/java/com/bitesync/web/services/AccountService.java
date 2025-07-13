@@ -40,6 +40,7 @@ public class AccountService {
         // COPY NON-SENSITIVE INFO TO SECONDARY ACCOUNT OBJECT
         Account info = new Account(account.getEmail(), null, account.getSecQ(), null);
         info.setTags(account.getTags());
+        info.setRecipes(account.getRecipes());
         return info;
     }
 
@@ -71,6 +72,14 @@ public class AccountService {
         if(account == null)
             return null;
         account.setTags(tags);
+        return accounts.save(account);
+    }
+
+    public Account updateRecipes(String id, List<String> recipes) {
+        Account account = accounts.findById(id).orElse(null);
+        if(account == null)
+            return null;
+        account.setRecipes(recipes);
         return accounts.save(account);
     }
 }

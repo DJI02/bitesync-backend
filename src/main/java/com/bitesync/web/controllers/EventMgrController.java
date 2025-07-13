@@ -26,8 +26,8 @@ public class EventMgrController {
         String description = event.getDescription();
 
         if(accountID.isEmpty()) {
-            System.out.println("INVALID AUTHOR ID.");
-            return new ResponseEntity<>("Invalid author ID.", HttpStatus.NOT_ACCEPTABLE);
+            System.out.println("INVALID ACCOUNT ID.");
+            return new ResponseEntity<>("Invalid account ID.", HttpStatus.NOT_ACCEPTABLE);
         }
 
         if(author.isEmpty() || author.length() > 128){
@@ -47,14 +47,14 @@ public class EventMgrController {
             return new ResponseEntity<>("Recipe created.", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        String id = service.addEvent(event).getId();
-        if(id.isEmpty()){
+        String eventID = service.addEvent(event).getId();
+        if(eventID.isEmpty()){
             System.out.println("FAILED TO SAVE EVENT.");
             return new ResponseEntity<>("Failed to create event.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        System.out.println("EVENT SAVED.");
-        return new ResponseEntity<>("Event created: " + id, HttpStatus.CREATED);
+        System.out.println("EVENT SAVED: " + eventID);
+        return new ResponseEntity<>("Event created: " + eventID, HttpStatus.CREATED);
     }
 
     @PutMapping("/edit")
@@ -93,7 +93,7 @@ public class EventMgrController {
             return new ResponseEntity<>("Failed to update event.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        System.out.println("EVENT SAVED.");
+        System.out.println("EVENT SAVED: " + eventID);
         return new ResponseEntity<>("Event updated: " + eventID, HttpStatus.OK);
     }
 
@@ -103,11 +103,11 @@ public class EventMgrController {
         String eventID = event.getId();
 
         if(service.removeEvent(accountID, eventID)) {
-            System.out.println("EVENT DELETED.");
+            System.out.println("EVENT DELETED: " + eventID);
             return new ResponseEntity<>("Event removed: " + eventID, HttpStatus.OK);
         }
 
-        System.out.println("FAILED TO DELETE EVENT.");
-        return new ResponseEntity<>("Failed to remove event.", HttpStatus.INTERNAL_SERVER_ERROR);
+        System.out.println("FAILED TO DELETE EVENT: " + eventID);
+        return new ResponseEntity<>("Failed to remove event: " + eventID, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

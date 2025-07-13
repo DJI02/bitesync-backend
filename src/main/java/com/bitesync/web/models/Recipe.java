@@ -1,6 +1,5 @@
 package com.bitesync.web.models;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
@@ -12,7 +11,7 @@ public class Recipe {
     @MongoId
     private String recipeID;
 
-    private String accountID;
+    private final String accountID;
     private String author;
     private String name;
     private String ingredients;
