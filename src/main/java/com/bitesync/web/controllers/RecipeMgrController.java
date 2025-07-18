@@ -20,6 +20,11 @@ public class RecipeMgrController {
     // TO THE DATABASE MANAGER TO SAVE INTO THE DATABASE.
     @PostMapping("/create")
     public ResponseEntity<String> createRecipe(@RequestBody Recipe recipe) {
+        if(recipe == null) {
+            System.out.println("INVALID RECIPE.");
+            return new ResponseEntity<>("Invalid recipe.", HttpStatus.NOT_ACCEPTABLE);
+        }
+
         String accountID = recipe.getAccountID();
         String author = recipe.getAuthor();
         String name = recipe.getName();
@@ -27,36 +32,40 @@ public class RecipeMgrController {
         String instructions = recipe.getInstructions();
         List<String> tags = recipe.getTags();
 
-        if(accountID.isEmpty()) {
+        if(accountID == null || accountID.isEmpty()) {
             System.out.println("INVALID AUTHOR ID.");
             return new ResponseEntity<>("Invalid author ID.", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        if(author.isEmpty() || author.length() > 128){
+        if(author == null || author.isEmpty() || author.length() > 128){
             System.out.println("INVALID AUTHOR.");
             return new ResponseEntity<>("Invalid author name.", HttpStatus.NOT_ACCEPTABLE);
         }
-        if(name.isEmpty() || name.length() > 128) {
+        if(name == null || name.isEmpty() || name.length() > 128) {
             System.out.println("INVALID NAME.");
             return new ResponseEntity<>("Invalid event name.", HttpStatus.NOT_ACCEPTABLE);
         }
-        if(ingredients.isEmpty() || ingredients.length() > 1024) {
+        if(ingredients == null || ingredients.isEmpty() || ingredients.length() > 1024) {
             System.out.println("INVALID INGREDIENTS.");
             return new ResponseEntity<>("Invalid ingredients.", HttpStatus.NOT_ACCEPTABLE);
         }
-        if(instructions.isEmpty() || instructions.length() > 2048) {
+        if(instructions == null || instructions.isEmpty() || instructions.length() > 2048) {
             System.out.println("INVALID INSTRUCTIONS.");
             return new ResponseEntity<>("Invalid instructions.", HttpStatus.NOT_ACCEPTABLE);
         }
+        if(tags == null) {
+            System.out.println("INVALID TAGS.");
+            return new ResponseEntity<>("Invalid tags.", HttpStatus.NOT_ACCEPTABLE);
+        }
         for (String tag : tags) {
-            if (tag.length() > 32) {
+            if (tag == null || tag.length() > 32 || tag.isEmpty()) {
                 System.out.println("INVALID TAGS.");
                 return new ResponseEntity<>("Invalid tags.", HttpStatus.NOT_ACCEPTABLE);
             }
         }
 
         String recipeID = service.addRecipe(recipe).getId();
-        if(recipeID.isEmpty()){
+        if(recipeID == null || recipeID.isEmpty()){
             System.out.println("FAILED TO SAVE RECIPE.");
             return new ResponseEntity<>("Failed to create recipe.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -67,6 +76,11 @@ public class RecipeMgrController {
 
     @PutMapping("/edit")
     public ResponseEntity<String> editRecipe(@RequestBody Recipe recipe) {
+        if(recipe == null) {
+            System.out.println("INVALID RECIPE.");
+            return new ResponseEntity<>("Invalid recipe.", HttpStatus.NOT_ACCEPTABLE);
+        }
+
         String accountID = recipe.getAccountID();
         String recipeID = recipe.getId();
         String author = recipe.getAuthor();
@@ -75,29 +89,38 @@ public class RecipeMgrController {
         String instructions = recipe.getInstructions();
         List<String> tags = recipe.getTags();
 
-        if(accountID.isEmpty()) {
+        if(accountID == null || accountID.isEmpty()) {
             System.out.println("INVALID AUTHOR ID.");
             return new ResponseEntity<>("Invalid author ID.", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        if(author.isEmpty() || author.length() > 128){
+        if(recipeID == null || recipeID.isEmpty()) {
+            System.out.println("INVALID RECIPE ID.");
+            return new ResponseEntity<>("Invalid recipe ID.", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        if(author == null || author.isEmpty() || author.length() > 128){
             System.out.println("INVALID AUTHOR.");
             return new ResponseEntity<>("Invalid author name.", HttpStatus.NOT_ACCEPTABLE);
         }
-        if(name.isEmpty() || name.length() > 128) {
+        if(name == null || name.isEmpty() || name.length() > 128) {
             System.out.println("INVALID NAME.");
             return new ResponseEntity<>("Invalid event name.", HttpStatus.NOT_ACCEPTABLE);
         }
-        if(ingredients.isEmpty() || ingredients.length() > 1024) {
+        if(ingredients == null || ingredients.isEmpty() || ingredients.length() > 1024) {
             System.out.println("INVALID INGREDIENTS.");
             return new ResponseEntity<>("Invalid ingredients.", HttpStatus.NOT_ACCEPTABLE);
         }
-        if(instructions.isEmpty() || instructions.length() > 2048) {
+        if(instructions == null || instructions.isEmpty() || instructions.length() > 2048) {
             System.out.println("INVALID INSTRUCTIONS.");
             return new ResponseEntity<>("Invalid instructions.", HttpStatus.NOT_ACCEPTABLE);
         }
+        if(tags == null) {
+            System.out.println("INVALID TAGS.");
+            return new ResponseEntity<>("Invalid tags.", HttpStatus.NOT_ACCEPTABLE);
+        }
         for (String tag : tags) {
-            if (tag.length() > 32) {
+            if (tag == null || tag.length() > 32 || tag.isEmpty()) {
                 System.out.println("INVALID TAGS.");
                 return new ResponseEntity<>("Invalid tags.", HttpStatus.NOT_ACCEPTABLE);
             }
@@ -114,8 +137,23 @@ public class RecipeMgrController {
 
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteRecipe(@RequestBody Recipe recipe) {
+        if(recipe == null) {
+            System.out.println("INVALID RECIPE.");
+            return new ResponseEntity<>("Invalid recipe.", HttpStatus.NOT_ACCEPTABLE);
+        }
+
         String accountID = recipe.getAccountID();
         String recipeID = recipe.getId();
+
+        if(accountID == null || accountID.isEmpty()) {
+            System.out.println("INVALID AUTHOR ID.");
+            return new ResponseEntity<>("Invalid author ID.", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        if(recipeID == null || recipeID.isEmpty()) {
+            System.out.println("INVALID RECIPE ID.");
+            return new ResponseEntity<>("Invalid recipe ID.", HttpStatus.NOT_ACCEPTABLE);
+        }
 
         if(service.removeRecipe(accountID, recipeID)) {
             System.out.println("RECIPE DELETED: " + recipeID);

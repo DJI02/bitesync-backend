@@ -16,7 +16,6 @@ public class Account {
     private List<Integer> secQ;
     private List<String> secA;
     private List<String> tags;
-
     private List<String> recipes;
 
     public Account(String email, String password, List<Integer> secQ, List<String> secA) {
@@ -91,5 +90,13 @@ public class Account {
 
     public void setRecipes(List<String> recipes) {
         this.recipes = recipes;
+    }
+
+    public boolean addRecipe(String recipeID) {
+        return recipes.add(recipeID);
+    }
+
+    public boolean removeRecipe(String recipeID) {
+        return recipes.remove(recipeID);
     }
 }

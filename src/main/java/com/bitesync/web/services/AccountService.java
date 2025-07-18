@@ -75,11 +75,21 @@ public class AccountService {
         return accounts.save(account);
     }
 
-    public Account updateRecipes(String id, List<String> recipes) {
-        Account account = accounts.findById(id).orElse(null);
+    public Account addRecipe(String accountID, String recipeID) {
+        Account account = accounts.findById(accountID).orElse(null);
         if(account == null)
             return null;
-        account.setRecipes(recipes);
+        if(!account.addRecipe(recipeID))
+            return null;
+        return accounts.save(account);
+    }
+
+    public Account removeRecipe(String accountID, String recipeID) {
+        Account account = accounts.findById(accountID).orElse(null);
+        if(account == null)
+            return null;
+        if(!account.removeRecipe(recipeID))
+            return null;
         return accounts.save(account);
     }
 }

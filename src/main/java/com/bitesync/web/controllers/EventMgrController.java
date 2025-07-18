@@ -19,36 +19,41 @@ public class EventMgrController {
     // TO THE DATABASE MANAGER TO SAVE INTO THE DATABASE.
     @PostMapping("/create")
     public ResponseEntity<String> createEvent(@RequestBody Event event) {
+        if(event == null) {
+            System.out.println("INVALID EVENT.");
+            return new ResponseEntity<>("Invalid event.", HttpStatus.NOT_ACCEPTABLE);
+        }
+
         String accountID = event.getAccountID();
         String author = event.getAuthor();
         String name = event.getName();
         String dateTime = event.getDateAndTime();
         String description = event.getDescription();
 
-        if(accountID.isEmpty()) {
+        if(accountID == null || accountID.isEmpty()) {
             System.out.println("INVALID ACCOUNT ID.");
             return new ResponseEntity<>("Invalid account ID.", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        if(author.isEmpty() || author.length() > 128){
+        if(author == null || author.isEmpty() || author.length() > 128){
             System.out.println("INVALID AUTHOR NAME.");
             return new ResponseEntity<>("Recipe created.", HttpStatus.NOT_ACCEPTABLE);
         }
-        if(name.isEmpty() || name.length() > 128) {
+        if(name == null || name.isEmpty() || name.length() > 128) {
             System.out.println("INVALID EVENT NAME.");
             return new ResponseEntity<>("Recipe created.", HttpStatus.NOT_ACCEPTABLE);
         }
-        if(dateTime.isEmpty() || dateTime.length() > 32) {
+        if(dateTime == null || dateTime.isEmpty() || dateTime.length() > 32) {
             System.out.println("INVALID DATE & TIME.");
             return new ResponseEntity<>("Recipe created.", HttpStatus.NOT_ACCEPTABLE);
         }
-        if(description.isEmpty() || description.length() > 1024) {
+        if(description == null || description.isEmpty() || description.length() > 1024) {
             System.out.println("INVALID DESCRIPTION.");
             return new ResponseEntity<>("Recipe created.", HttpStatus.NOT_ACCEPTABLE);
         }
 
         String eventID = service.addEvent(event).getId();
-        if(eventID.isEmpty()){
+        if(eventID == null || eventID.isEmpty()){
             System.out.println("FAILED TO SAVE EVENT.");
             return new ResponseEntity<>("Failed to create event.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -59,6 +64,11 @@ public class EventMgrController {
 
     @PutMapping("/edit")
     public ResponseEntity<String> editEvent(@RequestBody Event event) {
+        if(event == null) {
+            System.out.println("INVALID EVENT.");
+            return new ResponseEntity<>("Invalid event.", HttpStatus.NOT_ACCEPTABLE);
+        }
+
         String accountID = event.getAccountID();
         String eventID = event.getId();
         String author = event.getAuthor();
@@ -66,24 +76,29 @@ public class EventMgrController {
         String dateTime = event.getDateAndTime();
         String description = event.getDescription();
 
-        if(accountID.isEmpty()) {
+        if(accountID == null || accountID.isEmpty()) {
             System.out.println("INVALID AUTHOR ID.");
             return new ResponseEntity<>("Invalid author ID.", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        if(author.isEmpty() || author.length() > 128){
+        if(eventID == null || eventID.isEmpty()) {
+            System.out.println("INVALID EVENT ID.");
+            return new ResponseEntity<>("Invalid event ID.", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        if(author == null || author.isEmpty() || author.length() > 128){
             System.out.println("INVALID AUTHOR NAME.");
             return new ResponseEntity<>("Recipe created.", HttpStatus.NOT_ACCEPTABLE);
         }
-        if(name.isEmpty() || name.length() > 128) {
+        if(name == null || name.isEmpty() || name.length() > 128) {
             System.out.println("INVALID EVENT NAME.");
             return new ResponseEntity<>("Recipe created.", HttpStatus.NOT_ACCEPTABLE);
         }
-        if(dateTime.isEmpty() || dateTime.length() > 32) {
+        if(dateTime == null || dateTime.isEmpty() || dateTime.length() > 32) {
             System.out.println("INVALID DATE & TIME.");
             return new ResponseEntity<>("Recipe created.", HttpStatus.NOT_ACCEPTABLE);
         }
-        if(description.isEmpty() || description.length() > 1024) {
+        if(description == null || description.isEmpty() || description.length() > 1024) {
             System.out.println("INVALID DESCRIPTION.");
             return new ResponseEntity<>("Recipe created.", HttpStatus.NOT_ACCEPTABLE);
         }
@@ -99,8 +114,23 @@ public class EventMgrController {
 
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteEvent(@RequestBody Event event) {
+        if(event == null) {
+            System.out.println("INVALID EVENT.");
+            return new ResponseEntity<>("Invalid event.", HttpStatus.NOT_ACCEPTABLE);
+        }
+
         String accountID = event.getAccountID();
         String eventID = event.getId();
+
+        if(accountID == null || accountID.isEmpty()) {
+            System.out.println("INVALID AUTHOR ID.");
+            return new ResponseEntity<>("Invalid author ID.", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        if(eventID == null || eventID.isEmpty()) {
+            System.out.println("INVALID EVENT ID.");
+            return new ResponseEntity<>("Invalid event ID.", HttpStatus.NOT_ACCEPTABLE);
+        }
 
         if(service.removeEvent(accountID, eventID)) {
             System.out.println("EVENT DELETED: " + eventID);

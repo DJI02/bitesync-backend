@@ -27,6 +27,10 @@ public class EventListController {
     // SERVE A SPECIFIC EVENT BY ID.
     @PostMapping("/view")
     public ResponseEntity<Event> viewEvent(@RequestParam String eventID) {
+        if(eventID == null) {
+            System.out.println("INVALID EVENT ID,");
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        }
         Event event = service.getEvent(eventID);
 
         // IF NO EVENT MATCHES THE ENTERED ID.
