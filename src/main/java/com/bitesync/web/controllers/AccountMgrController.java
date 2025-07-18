@@ -50,7 +50,7 @@ public class AccountMgrController {
         }
 
         String accountID = account.getId();
-        String username = account.getEmail();
+        String username = account.getUsername();
 
         if(accountID == null || accountID.isEmpty()) {
             System.out.println("INVALID ACCOUNT ID.");
@@ -62,7 +62,7 @@ public class AccountMgrController {
             return new ResponseEntity<>("Invalid username.", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        // IF THERE IS ALREADY AN ACCOUNT UNDER THIS EMAIL.
+        // IF THERE IS ALREADY AN ACCOUNT UNDER THIS Username.
         // SERVE THE INVALID MESSAGE.
         if(accountService.getAccount(username) != null) {
             System.out.println("INVALID USERNAME.");

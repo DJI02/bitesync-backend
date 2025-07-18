@@ -39,22 +39,10 @@ public class LoginController {
     // TO THE DATABASE MANAGER TO SAVE INTO THE DATABASE.
     @PostMapping("/register")
     public ResponseEntity<String> createAccount(@RequestBody Account account) {
-        String email = account.getEmail();
+        String username = account.getUsername();
         String password = account.getPassword();
         List<String> securityAnswers = account.getSecA();
         List<Integer> securityQuestions = account.getSecQ();
-
-        /*
-        if(!email.contains("@") || email.contains(" ") || email.indexOf('\t') > -1 || email.length() < 3 || email.length() > 254){
-            System.out.println("Invalid email or password.");
-            return new ResponseEntity<>("Invalid email or password.", HttpStatus.NOT_ACCEPTABLE);
-            }
-
-        if(email.indexOf("@") != email.lastIndexOf("@")) {
-            System.out.println("Invalid email or password.");
-            return new ResponseEntity<>("Invalid email or password.", HttpStatus.NOT_ACCEPTABLE);
-        }
-        */
 
         if(password.length() > 128 || password.length() < 7 || password.contains(" ")) {
             System.out.println("INVALID PASSWORD.");
@@ -71,9 +59,9 @@ public class LoginController {
             return new ResponseEntity<>("Invalid security response.", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        // IF THERE IS ALREADY AN ACCOUNT UNDER THIS EMAIL.
+        // IF THERE IS ALREADY AN ACCOUNT UNDER THIS USERNAME.
         // SERVE THE INVALID MESSAGE.
-        if(service.getAccount(email) != null) {
+        if(service.getAccount(username) != null) {
             System.out.println("INVALID USERNAME.");
             return new ResponseEntity<>("Username already exists.", HttpStatus.BAD_REQUEST);
         }
@@ -99,15 +87,15 @@ public class LoginController {
         try {
             // Authenticate the user
             authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(login.getEmail(), login.getPassword())
+                new UsernamePasswordAuthenticationToken(login.getUsername(), login.getPassword())
             );
             
             // If authentication is successful, generate JWT token
-            final UserDetails userDetails = userDetailsService.loadUserByUsername(login.getEmail());
+            final UserDetails userDetails = userDetailsService.loadUserByUsername(login.getUsername());
             final String jwt = jwtUtil.generateToken(userDetails);
             
             // Return the token along with user ID
-            Account account = service.getAccount(login.getEmail());
+            Account account = service.getAccount(login.getUsername());
             Map<String, String> response = new HashMap<>();
             response.put("token", jwt);
             response.put("userId", account.getId());
@@ -117,7 +105,7 @@ public class LoginController {
             
         } catch (BadCredentialsException e) {
             System.out.println("ACCESS DENIED.");
-            return new ResponseEntity<>("Invalid email or password.", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>("Invalid Username or password.", HttpStatus.UNAUTHORIZED);
         }
     }
 }

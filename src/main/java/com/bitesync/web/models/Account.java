@@ -11,16 +11,16 @@ public class Account {
     @MongoId
     private String accountID;
 
-    private String email;
+    private String username;
     private String password;
     private List<Integer> secQ;
     private List<String> secA;
     private List<String> tags;
     private List<String> recipes;
 
-    public Account(String email, String password, List<Integer> secQ, List<String> secA) {
+    public Account(String username, String password, List<Integer> secQ, List<String> secA) {
         super();
-        this.email = email;
+        this.username = username;
         this.password = password;
         this.secQ = secQ;
         this.secA = secA;
@@ -44,12 +44,12 @@ public class Account {
         this.accountID = id;
     }
 
-    public String getEmail() {
-        return email;
+    public String getUsername() {
+        return username;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {

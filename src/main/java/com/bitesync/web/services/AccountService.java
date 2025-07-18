@@ -27,8 +27,8 @@ public class AccountService {
         accounts.deleteById(id);
     }
 
-    public Account getAccount(String email) {
-        return accounts.findByEmail(email);
+    public Account getAccount(String username) {
+        return accounts.findByUsername(username);
     }
 
     public Account getAccountInfo(String id) {
@@ -38,7 +38,7 @@ public class AccountService {
             return null;
 
         // COPY NON-SENSITIVE INFO TO SECONDARY ACCOUNT OBJECT
-        Account info = new Account(account.getEmail(), null, account.getSecQ(), null);
+        Account info = new Account(account.getUsername(), null, account.getSecQ(), null);
         info.setTags(account.getTags());
         info.setRecipes(account.getRecipes());
         return info;
@@ -52,7 +52,7 @@ public class AccountService {
         Account account = accounts.findById(id).orElse(null);
         if(account == null)
             return null;
-        account.setEmail(username);
+        account.setUsername(username);
         return accounts.save(account);
     }
 

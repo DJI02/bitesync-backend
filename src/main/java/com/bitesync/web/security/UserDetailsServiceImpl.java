@@ -14,17 +14,17 @@ import java.util.ArrayList;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    //When a request comes in with a JWT token, the JwtRequestFilter extracts the username (email), 
+    //When a request comes in with a JWT token, the JwtRequestFilter extracts the username (Username), 
     //then uses this service to load the corresponding user details, which are then used to validate the token.
     @Autowired
     private AccountService accountService;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Account account = accountService.getAccount(email);
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Account account = accountService.getAccount(username);
         if (account == null) {
-            throw new UsernameNotFoundException("User not found with email: " + email);
+            throw new UsernameNotFoundException("User not found with Username: " + username);
         }
-        return new User(account.getEmail(), account.getPassword(), new ArrayList<>());
+        return new User(account.getUsername(), account.getPassword(), new ArrayList<>());
     }
 }

@@ -15,24 +15,24 @@ public class LoginTestController {
     // CREATES A NEW ACCOUNT WITH ENTERED DETAILS AND PASSES IT
     // TO THE DATABASE MANAGER TO SAVE INTO THE DATABASE.
     public static String createAccount(Account account) {
-        String email = account.getEmail();
+        String username = account.getUsername();
         String password = account.getPassword();
         List<String> securityAnswers = account.getSecA();
         List<Integer> securityQuestions = account.getSecQ();
 
-        if(!email.contains("@") || email.contains(" ") || email.indexOf('\t') > -1 || email.length() < 3 || email.length() > 254){
-            System.out.println("Invalid email or password.");
-            return "Invalid email or password.";
+        if(!username.contains("@") || username.contains(" ") || username.indexOf('\t') > -1 || username.length() < 3 || username.length() > 254){
+            System.out.println("Invalid Username or password.");
+            return "Invalid Username or password.";
         }
 
-        if(email.indexOf("@") != email.lastIndexOf("@")) {
-            System.out.println("Invalid email or password.");
-            return "Invalid email or password.";
+        if(username.indexOf("@") != username.lastIndexOf("@")) {
+            System.out.println("Invalid Username or password.");
+            return "Invalid Username or password.";
         }
 
         if(password.length() > 128 || password.length() < 7 || password.contains(" ")) {
-            System.out.println("Invalid email or password.");
-            return "Invalid email or password.";
+            System.out.println("Invalid Username or password.");
+            return "Invalid Username or password.";
         }
 
         for(String securityAnswer : securityAnswers){
@@ -52,34 +52,34 @@ public class LoginTestController {
     }
 
     public static String validateAccount(Account login) {
-        String email = login.getEmail();
+        String Username = login.getUsername();
         String password = login.getPassword();
 
-        if(!email.contains("@") || email.contains(" ") || email.indexOf('\t') > -1 || email.length() < 3 || email.length() > 254){
-            System.out.println("Invalid email or password.");
-            return "Invalid email or password.";
+        if(!Username.contains("@") || Username.contains(" ") || Username.indexOf('\t') > -1 || Username.length() < 3 || Username.length() > 254){
+            System.out.println("Invalid Username or password.");
+            return "Invalid Username or password.";
         }
 
-        if(email.indexOf("@") != email.lastIndexOf("@")) {
-            System.out.println("Invalid email or password.");
-            return "Invalid email or password.";
+        if(Username.indexOf("@") != Username.lastIndexOf("@")) {
+            System.out.println("Invalid Username or password.");
+            return "Invalid Username or password.";
         }
 
         if(password.length() > 128 || password.length() < 7 || password.contains(" ")) {
-            System.out.println("Invalid email or password.");
-            return "Invalid email or password.";
+            System.out.println("Invalid Username or password.");
+            return "Invalid Username or password.";
         }
 
-        Account account = service.getAccount(email);
+        Account account = service.getAccount(Username);
 
         if(account == null) {
-            System.out.println("Invalid email or password.");
-            return "Invalid email or password.";
+            System.out.println("Invalid Username or password.");
+            return "Invalid Username or password.";
         }
 
         if(!account.getPassword().equals(password)) {
-            System.out.println("Invalid email or password.");
-            return "Invalid email or password.";
+            System.out.println("Invalid Username or password.");
+            return "Invalid Username or password.";
         }
 
         System.out.println("Login successful");

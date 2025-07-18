@@ -16,7 +16,7 @@ public class AccountTestService {
     public AccountTestService() {
         accounts = List.of(
                 new Account("test1", "test4321", List.of(1,2,3), List.of("y", "n", "?")),
-                new Account("email@gmail.com", "password", List.of(1,2,3), List.of("Yes", "No", "Yes?")),
+                new Account("username@gmail.com", "password", List.of(1,2,3), List.of("Yes", "No", "Yes?")),
                 new Account("test2", "test1234", List.of(1,2,3), List.of("y", "n", "?"))
         );
     }
@@ -30,9 +30,9 @@ public class AccountTestService {
         accounts.removeIf(account -> Objects.equals(account.getId(), id));
     }
 
-    public Account getAccount(String email) {
+    public Account getAccount(String Username) {
         for(Account account : accounts) {
-            if(Objects.equals(account.getEmail(), email))
+            if(Objects.equals(account.getUsername(), Username))
                 return account;
         }
         return null;
