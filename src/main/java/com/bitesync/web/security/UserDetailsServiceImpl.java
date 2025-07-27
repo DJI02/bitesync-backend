@@ -23,7 +23,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Account account = accountService.getAccount(username);
         if (account == null) {
-            throw new UsernameNotFoundException("User not found with Username: " + username);
+            throw new UsernameNotFoundException("User not found with username: " + username);
         }
         return new User(account.getUsername(), account.getPassword(), new ArrayList<>());
     }

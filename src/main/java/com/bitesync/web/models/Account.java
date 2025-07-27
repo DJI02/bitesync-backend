@@ -3,6 +3,7 @@ package com.bitesync.web.models;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Document
@@ -24,6 +25,7 @@ public class Account {
         this.password = password;
         this.secQ = secQ;
         this.secA = secA;
+        this.recipes = new ArrayList<>();
     }
 
     public String verifyPassword(String password) {
