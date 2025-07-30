@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -67,7 +68,7 @@ public class RecipeBookController {
         }
 
         List<String> recipeIDs = account.getRecipes();
-        List<Recipe> recipes = List.of();
+        List<Recipe> recipes = new ArrayList<>();
         Recipe recipe;
 
         if(recipeIDs == null) {
@@ -119,7 +120,7 @@ public class RecipeBookController {
     }
 
     @DeleteMapping("/unfavorite")
-    public ResponseEntity<String> removeFavorite(Recipe recipe) {
+    public ResponseEntity<String> removeFavorite(@RequestBody Recipe recipe) {
         if(recipe == null) {
             System.out.println("INVALID RECIPE.");
             return new ResponseEntity<>("Invalid recipe.", HttpStatus.NOT_ACCEPTABLE);
