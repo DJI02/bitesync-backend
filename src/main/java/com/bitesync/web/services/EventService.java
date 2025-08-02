@@ -47,7 +47,7 @@ public class EventService {
         return events.findAll();
     }
 
-    public Event updateParticipants(String eventId, List<String> participant) {
+    public Event updateParticipant(String eventId, List<String> participant) {
         Event event = events.findById(eventId).orElse(null);
         if(event == null)
             return null;
@@ -71,5 +71,27 @@ public class EventService {
         event.setParticipants(eventParticipants);
 
         return events.save(event);
+    }
+
+    public Event removeParticipant(String eventID, String accountID) {
+        Event event = events.findById(eventID).orElse(null);
+        if(event == null)
+            return null;
+
+        List<List<String>> eventParticipants = event.getParticipants();
+
+        int i = 0;
+
+        for(List<String> user : eventParticipants) {
+            if(user.get(0).equals(accountID)) {
+                eventParticipants.remove(i);
+                event.setParticipants(eventParticipants);
+
+                return events.save(event);
+            }
+            i++;
+        }
+
+        return null;
     }
 }

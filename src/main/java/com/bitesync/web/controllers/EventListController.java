@@ -69,11 +69,42 @@ public class EventListController {
                 return new ResponseEntity<>("Invalid participant.", HttpStatus.NOT_ACCEPTABLE);
             }
 
-        Event event = eventService.updateParticipants(eventID, participant);
+        Event event = eventService.updateParticipant(eventID, participant);
 
         if(event == null) {
             System.out.println("EVENT NOT FOUND: " + eventID);
             return new ResponseEntity<>("Event not found: " + eventID, HttpStatus.NOT_FOUND);
+        }
+
+        System.out.println("EVENT SAVED: " + eventID);
+        return new ResponseEntity<>("Event updated: " + eventID, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/leave")
+    public ResponseEntity<String> leaveEvent(@RequestBody List<String> IDs) {
+        if(IDs == null || IDs.size() != 2) {
+            System.out.println("INVALID IDs.");
+            return new ResponseEntity<>("Invalid IDs.", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        String eventID = IDs.get(0);
+        String accountID = IDs.get(1);
+
+        if(eventID == null || eventID.isEmpty()) {
+            System.out.println("INVALID EVENT ID.");
+            return new ResponseEntity<>("Invalid event ID.", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        if(accountID == null || accountID.isEmpty()) {
+            System.out.println("INVALID ACCOUNT ID.");
+            return new ResponseEntity<>("Invalid account ID.", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        Event event = eventService.removeParticipant(eventID, accountID);
+
+        if(event == null) {
+            System.out.println("Failed to save event: " + eventID);
+            return new ResponseEntity<>("Failed to update event: " + eventID, HttpStatus.NOT_FOUND);
         }
 
         System.out.println("EVENT SAVED: " + eventID);
