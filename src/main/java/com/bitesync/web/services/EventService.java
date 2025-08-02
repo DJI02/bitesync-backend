@@ -3,7 +3,6 @@ package com.bitesync.web.services;
 import com.bitesync.web.models.Event;
 import com.bitesync.web.repositories.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,42 +47,29 @@ public class EventService {
         return events.findAll();
     }
 
-    public Event addParticipant(String eventId, List<String> participant) {
+    public Event updateParticipants(String eventId, List<String> participant) {
         Event event = events.findById(eventId).orElse(null);
         if(event == null)
             return null;
 
-        List<List<String>> eventParticipants = event.getRecipes();
+        List<List<String>> eventParticipants = event.getParticipants();
         String userId = participant.get(0);
 
-        for(List<String> user : eventParticipants) {
-            if(user.get(0).equals(userId))
-                return null;
-        }
-
-        eventParticipants.add(participant);
-        event.setRecipes(eventParticipants);
-        event.setId(eventId);
-        return events.save(event);
-    }
-
-    public Event updateRecipes(String eventId, List<String> participant) {
-        Event event = events.findById(eventId).orElse(null);
-        if(event == null)
-            return null;
-
-        List<List<String>> eventRecipes = event.getRecipes();
-        String userId = participant.get(0);
         int i = 0;
 
-        for(List<String> user : eventRecipes) {
+        for(List<String> user : eventParticipants) {
             if(user.get(0).equals(userId)) {
-                eventRecipes.set(i, participant);
-                event.setRecipes(eventRecipes);
+                eventParticipants.set(i, participant);
+                event.setParticipants(eventParticipants);
+
                 return events.save(event);
             }
             i++;
         }
-        return null;
+
+        eventParticipants.add(participant);
+        event.setParticipants(eventParticipants);
+
+        return events.save(event);
     }
 }

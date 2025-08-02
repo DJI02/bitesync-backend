@@ -16,16 +16,16 @@ public class Event {
     private String name;
     private String dateAndTime;
     private String description;
-    private List<List<String>> recipes;
+    private List<List<String>> participants;
 
-    public Event(String accountID, String author, String name, String dateAndTime, String description, List<List<String>> recipes) {
+    public Event(String accountID, String author, String name, String dateAndTime, String description, List<List<String>> participants) {
         super();
         this.accountID = accountID;
         this.author = author;
         this.name = name;
         this.dateAndTime = dateAndTime;
         this.description = description;
-        this.recipes = recipes;
+        this.participants = participants;
     }
 
     public String getId() {
@@ -72,11 +72,11 @@ public class Event {
         this.description = description;
     }
 
-    public List<List<String>> getRecipes() {
-        return recipes;
+    public List<List<String>> getParticipants() {
+        return participants;
     }
 
-    public void setRecipes(List<List<String>> recipes) {
-        this.recipes = recipes;
+    public void setParticipants(List<List<String>> participants) {
+        this.participants = participants;
     }
 }
