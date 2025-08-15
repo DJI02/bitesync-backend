@@ -79,11 +79,17 @@ public class RecipeBookController {
         for(String recipeID : recipeIDs) {
             recipe = recipeService.getRecipe(recipeID);
             if(recipe == null){
+                account = accountService.removeRecipe(accountID, recipeID);
+                if(account == null) {
+                    System.out.println("FAILED TO SAVE ACCOUNT.");
+                    return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+                }
                 System.out.println("RECIPE NOT FOUND: " + recipeID);
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-            System.out.println("RECIPE FOUND: " + recipeID);
-            recipes.add(recipe);
+            else {
+                System.out.println("RECIPE FOUND: " + recipeID);
+                recipes.add(recipe);
+            }
         }
 
         System.out.println("LOADING RECIPES.");
