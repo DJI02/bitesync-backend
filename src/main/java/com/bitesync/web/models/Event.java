@@ -3,6 +3,7 @@ package com.bitesync.web.models;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Document
@@ -18,14 +19,14 @@ public class Event {
     private String description;
     private List<List<String>> participants;
 
-    public Event(String accountID, String author, String name, String dateAndTime, String description, List<List<String>> participants) {
+    public Event(String accountID, String author, String name, String dateAndTime, String description) {
         super();
         this.accountID = accountID;
         this.author = author;
         this.name = name;
         this.dateAndTime = dateAndTime;
         this.description = description;
-        this.participants = participants;
+        this.participants = new ArrayList<>();
     }
 
     public String getId() {

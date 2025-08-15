@@ -5,6 +5,7 @@ import com.bitesync.web.repositories.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -53,7 +54,12 @@ public class EventService {
             return null;
 
         List<List<String>> eventParticipants = event.getParticipants();
+        if(eventParticipants == null)
+            return null;
+
         String userId = participant.get(0);
+        if(userId == null)
+            return null;
 
         int i = 0;
 
@@ -79,6 +85,8 @@ public class EventService {
             return null;
 
         List<List<String>> eventParticipants = event.getParticipants();
+        if(eventParticipants == null)
+            return null;
 
         int i = 0;
 

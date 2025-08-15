@@ -10,7 +10,7 @@ public class EventTestService {
 
     public EventTestService() {
         events = List.of(
-                new Event("", "", "", "", "", List.of(List.of("")))
+                new Event("", "", "", "", "")
         );
     }
 
