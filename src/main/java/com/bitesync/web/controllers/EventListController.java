@@ -110,4 +110,10 @@ public class EventListController {
         System.out.println("EVENT SAVED: " + eventID);
         return new ResponseEntity<>("Event updated: " + eventID, HttpStatus.OK);
     }
+
+    @GetMapping("/archive")
+    public ResponseEntity<List<Event>> viewArchive() {
+        System.out.println("LOADING ALL ARCHIVED EVENTS.");
+        return new ResponseEntity<>(eventService.getAllArchived(), HttpStatus.FOUND);
+    }
 }

@@ -140,4 +140,80 @@ public class EventMgrController {
         System.out.println("FAILED TO DELETE EVENT: " + eventID);
         return new ResponseEntity<>("Failed to remove event: " + eventID, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @PostMapping("/archive")
+    public ResponseEntity<String> archiveEvent(@RequestBody Event event) {
+        if(event == null) {
+            System.out.println("INVALID EVENT.");
+            return new ResponseEntity<>("Invalid event.", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        String accountID = event.getAccountID();
+        String eventID = event.getId();
+
+        if(accountID == null || accountID.isEmpty()) {
+            System.out.println("INVALID AUTHOR ID.");
+            return new ResponseEntity<>("Invalid author ID.", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        if(eventID == null || eventID.isEmpty()) {
+            System.out.println("INVALID EVENT ID.");
+            return new ResponseEntity<>("Invalid event ID.", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        if(service.archiveEvent(accountID, eventID) != null) {
+            System.out.println("EVENT ARCHIVED: " + eventID);
+            if(service.removeEvent(accountID, eventID)) {
+                System.out.println("EVENT DELETED: " + eventID);
+                return new ResponseEntity<>("Event archived: " + eventID, HttpStatus.OK);
+            }
+
+            System.out.println("FAILED TO DELETE EVENT: " + eventID);
+            return new ResponseEntity<>("Failed to remove event: " + eventID, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        System.out.println("FAILED TO ARCHIVE EVENT: " + eventID);
+        return new ResponseEntity<>("Failed to archive event: " + eventID, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @PostMapping("/unarchive")
+    public ResponseEntity<String> unarchiveEvent(@RequestBody Event event) {
+        if(event == null) {
+            System.out.println("INVALID EVENT.");
+            return new ResponseEntity<>("Invalid event.", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        String accountID = event.getAccountID();
+        String eventID = event.getId();
+
+        if(accountID == null || accountID.isEmpty()) {
+            System.out.println("INVALID ACCOUNT ID.");
+            return new ResponseEntity<>("Invalid account ID.", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        if(eventID == null || eventID.isEmpty()) {
+            System.out.println("INVALID EVENT ID.");
+            return new ResponseEntity<>("Invalid event ID.", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        Event archivedEvent = service.getArchivedEvent(eventID);
+        if(archivedEvent == null) {
+            System.out.println("EVENT NOT FOUND.");
+            return new ResponseEntity<>("Archived event not found: " + eventID, HttpStatus.NOT_FOUND);
+        }
+
+        if(service.unarchiveEvent(accountID, eventID)) {
+            System.out.println("EVENT UNARCHIVED: " + eventID);
+            if(service.addEvent(archivedEvent) != null) {
+                System.out.println("EVENT SAVED: " + eventID);
+                return new ResponseEntity<>("Event unarchived: " + eventID, HttpStatus.OK);
+            }
+
+            System.out.println("FAILED TO SAVE EVENT: " + eventID);
+            return new ResponseEntity<>("Failed to create event: " + eventID, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        System.out.println("FAILED TO UNARCHIVE EVENT: " + eventID);
+        return new ResponseEntity<>("Failed to unarchive event: " + eventID, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

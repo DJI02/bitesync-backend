@@ -1,6 +1,7 @@
 package com.bitesync.web.services;
 
 import com.bitesync.web.models.Event;
+import com.bitesync.web.repositories.ArchivedEventRepository;
 import com.bitesync.web.repositories.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,9 @@ public class EventService {
 
     @Autowired
     private EventRepository events;
+
+    @Autowired
+    private ArchivedEventRepository archivedEvents;
 
     public Event addEvent(Event event) {
         return events.save(event);
@@ -101,5 +105,33 @@ public class EventService {
         }
 
         return null;
+    }
+
+    public Event getArchivedEvent(String id) {
+        return archivedEvents.findById(id).orElse(null);
+    }
+
+    public List<Event> getAllArchived() {
+        return archivedEvents.findAll();
+    }
+
+    public Event archiveEvent (String accountID, String eventID) {
+        Event auth = events.findById(eventID).orElse(null);
+        if(auth == null)
+            return null;
+        if(auth.getAccountID().equals(accountID))
+            return archivedEvents.save(auth);
+        return null;
+    }
+
+    public boolean unarchiveEvent (String accountID, String eventID) {
+        Event auth = events.findById(eventID).orElse(null);
+        if(auth == null)
+            return false;
+        if(auth.getAccountID().equals(accountID)) {
+            archivedEvents.deleteById(eventID);
+            return true;
+        }
+        return false;
     }
 }
