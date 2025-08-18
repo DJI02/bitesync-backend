@@ -44,19 +44,26 @@ public class LoginController {
         List<String> securityAnswers = account.getSecA();
         List<Integer> securityQuestions = account.getSecQ();
 
-        if(password.length() > 128 || password.length() < 7 || password.contains(" ")) {
+        if(username == null || username.isEmpty()) {
+            System.out.println("INVALID USERNAME.");
+            return new ResponseEntity<>("Invalid username or password.", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        if(password == null || password.length() > 128 || password.length() < 7 || password.contains(" ")) {
             System.out.println("INVALID PASSWORD.");
             return new ResponseEntity<>("Invalid username or password.", HttpStatus.NOT_ACCEPTABLE);
         }
+
+        if(securityQuestions == null || securityQuestions.isEmpty() || securityAnswers == null || securityAnswers.isEmpty()) {
+            System.out.println("INVALID SECURITY RESPONSE.");
+            return new ResponseEntity<>("Invalid security response.", HttpStatus.NOT_ACCEPTABLE);
+        }
+
         for(String securityAnswer : securityAnswers){
-            if(securityAnswer.length() > 128 || securityAnswer.isEmpty()) {
+            if(securityAnswer == null || securityAnswer.length() > 128 || securityAnswer.isEmpty()) {
                 System.out.println("INVALID SECURITY RESPONSE.");
                 return new ResponseEntity<>("Invalid security response.", HttpStatus.NOT_ACCEPTABLE);
             }
-        }
-        if(securityQuestions.isEmpty()) {
-            System.out.println("INVALID SECURITY RESPONSE.");
-            return new ResponseEntity<>("Invalid security response.", HttpStatus.NOT_ACCEPTABLE);
         }
 
         // IF THERE IS ALREADY AN ACCOUNT UNDER THIS USERNAME.
@@ -107,5 +114,28 @@ public class LoginController {
             System.out.println("ACCESS DENIED.");
             return new ResponseEntity<>("Invalid Username or password.", HttpStatus.UNAUTHORIZED);
         }
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<Account> changePassword(@RequestParam String username) {
+        if(username == null || username.isEmpty()) {
+            System.out.println("INVALID USERNAME.");
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        // FETCH ACCOUNT BY USERNAME.
+        Account account = service.getAccount(username);
+
+        if(account == null) {
+            System.out.println("ACCOUNT NOT FOUND.");
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        // COPY ACCOUNT ID AND SECURITY QUESTIONS INTO A MORE SECURE TEMPLATE.
+        Account secure = new Account(null, null, account.getSecQ(), null);
+        secure.setId(account.getId());
+
+        System.out.println("ACCOUNT FOUND.");
+        return new ResponseEntity<>(secure, HttpStatus.OK);
     }
 }
