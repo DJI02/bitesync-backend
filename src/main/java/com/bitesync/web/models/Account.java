@@ -25,7 +25,8 @@ public class Account {
         this.password = password;
         this.secQ = secQ;
         this.secA = secA;
-        this.recipes = new ArrayList<>(); //
+        this.tags = new ArrayList<>();
+        this.recipes = new ArrayList<>();
     }
 
     public String verifyPassword(String password) {
