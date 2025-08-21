@@ -34,10 +34,26 @@ public class EventService {
     }
 
     public boolean removeEvent(String accountID, String eventID) {
+
+        // SEARCH ACTIVE EVENTS.
         Event auth = events.findById(eventID).orElse(null);
-        if(auth == null)
+        if(auth == null) {
+
+            // SEARCH ARCHIVED EVENTS.
+            auth = archivedEvents.findById(eventID).orElse(null);
+            if(auth == null)
+                return false;
+
+            // VERIFY USER AUTHORIZATION.
+            if(auth.getAccountID().equals(accountID) || accountID.equals("ADMIN")) {
+                archivedEvents.deleteById(eventID);
+                return true;
+            }
             return false;
-        if(auth.getAccountID().equals(accountID)) {
+        }
+
+        // VERIFY USER AUTHORIZATION.
+        if(auth.getAccountID().equals(accountID) || accountID.equals("ADMIN")) {
             events.deleteById(eventID);
             return true;
         }

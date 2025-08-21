@@ -1,6 +1,7 @@
 package com.bitesync.web.controllers;
 
 import com.bitesync.web.models.Account;
+import com.bitesync.web.models.Event;
 import com.bitesync.web.services.AccountService;
 import com.bitesync.web.services.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -157,10 +158,32 @@ public class AccountMgrController {
         return new ResponseEntity<>("Account updated: " + accountID, HttpStatus.OK);
     }
 
-    // SERVE ALL EXISTING ACCOUNTS.
-    @GetMapping("/all")
-    public ResponseEntity<List<Account>> viewAccounts() {
-        System.out.println("LOADING ALL ACCOUNTS.");
-        return new ResponseEntity<>(accountService.getAll(), HttpStatus.OK);
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteAccount(@RequestBody List<String> ids) {
+        if(ids == null) {
+            System.out.println("INVALID IDS.");
+            return new ResponseEntity<>("Invalid ids.", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        String callerID = ids.get(0);
+        String targetID = ids.get(1);
+
+        if(callerID == null || callerID.isEmpty()) {
+            System.out.println("INVALID CALLER ID.");
+            return new ResponseEntity<>("Invalid account ID.", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        if(targetID == null || targetID.isEmpty()) {
+            System.out.println("INVALID TARGET ID.");
+            return new ResponseEntity<>("Invalid account ID.", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        if(accountService.removeAccount(callerID, targetID)) {
+            System.out.println("ACCOUNT DELETED: " + targetID);
+            return new ResponseEntity<>("Account removed: " + targetID, HttpStatus.OK);
+        }
+
+        System.out.println("FAILED TO DELETE ACCOUNT: " + targetID);
+        return new ResponseEntity<>("Failed to remove account: " + targetID, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

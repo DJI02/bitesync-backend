@@ -1,11 +1,13 @@
 package com.bitesync.web.services;
 
 import com.bitesync.web.models.Account;
+import com.bitesync.web.models.Event;
 import com.bitesync.web.repositories.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,8 +25,12 @@ public class AccountService {
         return accounts.save(account);
     }
 
-    public void removeAccount(String id) {
-        accounts.deleteById(id);
+    public boolean removeAccount(String callerID, String deleteID) {
+        if(callerID.equals(deleteID) || callerID.equals("ADMIN")) {
+            accounts.deleteById(deleteID);
+            return true;
+        }
+        return false;
     }
 
     public Account getAccount(String username) {
@@ -45,7 +51,15 @@ public class AccountService {
     }
 
     public List<Account> getAll() {
-        return accounts.findAll();
+        List<Account> all = accounts.findAll();
+        List<Account> allInfo = new ArrayList<>();
+
+        for(Account account : all) {
+            if(account != null)
+                allInfo.add(this.getAccountInfo(account.getId()));
+        }
+
+        return allInfo;
     }
 
     public Account updateUsername(String id, String username) {

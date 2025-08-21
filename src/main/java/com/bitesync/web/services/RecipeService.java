@@ -32,7 +32,7 @@ public class RecipeService {
         Recipe auth = recipes.findById(recipeID).orElse(null);
         if(auth == null)
             return false;
-        if(auth.getAccountID().equals(accountID)) {
+        if(auth.getAccountID().equals(accountID) || accountID.equals("ADMIN")) {
             recipes.deleteById(recipeID);
             return true;
         }

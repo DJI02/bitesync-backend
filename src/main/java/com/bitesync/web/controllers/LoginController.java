@@ -3,6 +3,7 @@ package com.bitesync.web.controllers;
 import com.bitesync.web.models.Account;
 import com.bitesync.web.security.JwtUtil;
 import com.bitesync.web.services.AccountService;
+import com.bitesync.web.services.SecurityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,9 @@ public class LoginController {
 
     @Autowired
     private AccountService service;
+
+    @Autowired
+    private SecurityService security;
     
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -39,6 +43,25 @@ public class LoginController {
     // TO THE DATABASE MANAGER TO SAVE INTO THE DATABASE.
     @PostMapping("/register")
     public ResponseEntity<String> createAccount(@RequestBody Account account) {
+        if(account == null) {
+            System.out.println("INVALID ACCOUNT.");
+            return new ResponseEntity<>("Invalid account.", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        // VERIFY REGISTRATION KEY.
+        boolean admin = false;
+        String key = account.getId();
+
+        if(key == null || !key.equals(security.getKey(false))) {
+            if(key != null && !key.equals(security.getKey(true)))
+                admin = true;
+            else {
+                System.out.println("INVALID REGISTRATION KEY.");
+                return new ResponseEntity<>("Invalid registration key.", HttpStatus.UNAUTHORIZED);
+            }
+        }
+
+        // VERIFY VALIDITY OF ACCOUNT DETAILS.
         String username = account.getUsername();
         String password = account.getPassword();
         List<String> securityAnswers = account.getSecA();
@@ -72,6 +95,11 @@ public class LoginController {
             System.out.println("INVALID USERNAME.");
             return new ResponseEntity<>("Username already exists.", HttpStatus.BAD_REQUEST);
         }
+
+        // IF ADMIN KEY IS ENTERED, SET ACCOUNT TO ADMINISTRATOR.
+        account = new Account(username, password, securityQuestions, securityAnswers);
+        if(admin)
+            account.setId("ADMIN");
 
         // OTHERWISE, AN ACCOUNT IS SUCCESSFULLY CREATED.
         try {
