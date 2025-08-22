@@ -1,6 +1,7 @@
 package com.bitesync.web.controllers;
 
 import com.bitesync.web.models.Event;
+import com.bitesync.web.services.ArchiveService;
 import com.bitesync.web.services.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,7 +14,10 @@ import org.springframework.web.bind.annotation.*;
 public class EventMgrController {
 
     @Autowired
-    private EventService service;
+    private EventService eventService;
+
+    @Autowired
+    private ArchiveService archiveService;
 
     // CREATES A NEW EVENT WITH ENTERED DETAILS AND PASSES IT
     // TO THE DATABASE MANAGER TO SAVE INTO THE DATABASE.
@@ -52,7 +56,7 @@ public class EventMgrController {
             return new ResponseEntity<>("Recipe created.", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        String eventID = service.addEvent(event).getId();
+        String eventID = eventService.addEvent(event).getId();
         if(eventID == null || eventID.isEmpty()){
             System.out.println("FAILED TO SAVE EVENT.");
             return new ResponseEntity<>("Failed to create event.", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -103,7 +107,7 @@ public class EventMgrController {
             return new ResponseEntity<>("Recipe created.", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        if(service.updateEvent(accountID, eventID, event) == null){
+        if(eventService.updateEvent(accountID, eventID, event) == null){
             System.out.println("FAILED TO SAVE EVENT.");
             return new ResponseEntity<>("Failed to update event.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -132,7 +136,7 @@ public class EventMgrController {
             return new ResponseEntity<>("Invalid event ID.", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        if(service.removeEvent(accountID, eventID)) {
+        if(eventService.removeEvent(accountID, eventID)) {
             System.out.println("EVENT DELETED: " + eventID);
             return new ResponseEntity<>("Event removed: " + eventID, HttpStatus.OK);
         }
@@ -161,9 +165,16 @@ public class EventMgrController {
             return new ResponseEntity<>("Invalid event ID.", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        if(service.archiveEvent(accountID, eventID) != null) {
+        event = eventService.getEvent(eventID);
+        if(event == null) {
+            System.out.println("EVENT NOT FOUND.");
+            return new ResponseEntity<>("Event not found.", HttpStatus.NOT_FOUND);
+        }
+
+        if(archiveService.archiveEvent(accountID, event) != null) {
             System.out.println("EVENT ARCHIVED: " + eventID);
-            if(service.removeEvent(accountID, eventID)) {
+
+            if(eventService.removeEvent(accountID, eventID)) {
                 System.out.println("EVENT DELETED: " + eventID);
                 return new ResponseEntity<>("Event archived: " + eventID, HttpStatus.OK);
             }
@@ -196,15 +207,16 @@ public class EventMgrController {
             return new ResponseEntity<>("Invalid event ID.", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        Event archivedEvent = service.getArchivedEvent(eventID);
+        Event archivedEvent = archiveService.getArchivedEvent(eventID);
         if(archivedEvent == null) {
             System.out.println("EVENT NOT FOUND.");
             return new ResponseEntity<>("Archived event not found: " + eventID, HttpStatus.NOT_FOUND);
         }
 
-        if(service.unarchiveEvent(accountID, eventID)) {
+        if(archiveService.unarchiveEvent(accountID, eventID)) {
             System.out.println("EVENT UNARCHIVED: " + eventID);
-            if(service.addEvent(archivedEvent) != null) {
+
+            if(eventService.addEvent(archivedEvent) != null) {
                 System.out.println("EVENT SAVED: " + eventID);
                 return new ResponseEntity<>("Event unarchived: " + eventID, HttpStatus.OK);
             }

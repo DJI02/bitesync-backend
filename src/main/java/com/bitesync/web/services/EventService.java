@@ -38,17 +38,6 @@ public class EventService {
         // SEARCH ACTIVE EVENTS.
         Event auth = events.findById(eventID).orElse(null);
         if(auth == null) {
-
-            // SEARCH ARCHIVED EVENTS.
-            auth = archivedEvents.findById(eventID).orElse(null);
-            if(auth == null)
-                return false;
-
-            // VERIFY USER AUTHORIZATION.
-            if(auth.getAccountID().equals(accountID) || accountID.equals("ADMIN")) {
-                archivedEvents.deleteById(eventID);
-                return true;
-            }
             return false;
         }
 
@@ -121,33 +110,5 @@ public class EventService {
         }
 
         return null;
-    }
-
-    public Event getArchivedEvent(String id) {
-        return archivedEvents.findById(id).orElse(null);
-    }
-
-    public List<Event> getAllArchived() {
-        return archivedEvents.findAll();
-    }
-
-    public Event archiveEvent (String accountID, String eventID) {
-        Event auth = events.findById(eventID).orElse(null);
-        if(auth == null)
-            return null;
-        if(auth.getAccountID().equals(accountID))
-            return archivedEvents.save(auth);
-        return null;
-    }
-
-    public boolean unarchiveEvent (String accountID, String eventID) {
-        Event auth = events.findById(eventID).orElse(null);
-        if(auth == null)
-            return false;
-        if(auth.getAccountID().equals(accountID)) {
-            archivedEvents.deleteById(eventID);
-            return true;
-        }
-        return false;
     }
 }

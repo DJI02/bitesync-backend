@@ -2,6 +2,7 @@ package com.bitesync.web.controllers;
 
 import com.bitesync.web.models.Event;
 import com.bitesync.web.services.AccountService;
+import com.bitesync.web.services.ArchiveService;
 import com.bitesync.web.services.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,9 @@ public class EventListController {
 
     @Autowired
     private EventService eventService;
+
+    @Autowired
+    private ArchiveService archiveService;
 
     // SERVE ALL EXISTING EVENTS.
     @GetMapping("/all")
@@ -114,6 +118,6 @@ public class EventListController {
     @GetMapping("/archive")
     public ResponseEntity<List<Event>> viewArchive() {
         System.out.println("LOADING ALL ARCHIVED EVENTS.");
-        return new ResponseEntity<>(eventService.getAllArchived(), HttpStatus.FOUND);
+        return new ResponseEntity<>(archiveService.getAllArchived(), HttpStatus.FOUND);
     }
 }
