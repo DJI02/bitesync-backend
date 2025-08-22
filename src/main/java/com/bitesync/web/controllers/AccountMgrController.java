@@ -1,7 +1,6 @@
 package com.bitesync.web.controllers;
 
 import com.bitesync.web.models.Account;
-import com.bitesync.web.models.Event;
 import com.bitesync.web.services.AccountService;
 import com.bitesync.web.services.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;

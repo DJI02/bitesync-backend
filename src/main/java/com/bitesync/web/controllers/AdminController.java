@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping(value="/admin", produces="application/json")
+@RequestMapping(value = "/admin", produces = "application/json")
 public class AdminController {
 
     @Autowired
@@ -31,7 +31,7 @@ public class AdminController {
     private SecurityService securityService;
 
     // SERVE ALL EXISTING ACCOUNTS.
-    @PostMapping("/all")
+    @PostMapping("/accounts")
     public ResponseEntity<List<Account>> viewAccounts(@RequestParam String id) {
         if(id.equals("ADMIN")) {
             System.out.println("LOADING ALL ACCOUNTS.");

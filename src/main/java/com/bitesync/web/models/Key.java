@@ -6,9 +6,7 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 @Document
 public class Key {
 
-    @MongoId
-    private String role;
-
+    private final String role;
     private String key;
 
     public Key(Boolean admin, String key) {

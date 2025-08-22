@@ -18,6 +18,7 @@ public class Event {
     private String dateAndTime;
     private String description;
     private List<List<String>> participants;
+    boolean archived;
 
     public Event(String accountID, String author, String name, String dateAndTime, String description) {
         super();
@@ -27,6 +28,7 @@ public class Event {
         this.dateAndTime = dateAndTime;
         this.description = description;
         this.participants = new ArrayList<>();
+        archived = false;
     }
 
     public String getId() {
@@ -79,5 +81,17 @@ public class Event {
 
     public void setParticipants(List<List<String>> participants) {
         this.participants = participants;
+    }
+
+    public boolean getArchive() {
+        return archived;
+    }
+
+    public void setArchive() {
+        archived = !archived;
+    }
+
+    public void setArchive(boolean archived) {
+        this.archived = archived;
     }
 }

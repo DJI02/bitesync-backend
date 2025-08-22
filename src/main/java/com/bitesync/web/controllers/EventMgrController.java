@@ -1,7 +1,6 @@
 package com.bitesync.web.controllers;
 
 import com.bitesync.web.models.Event;
-import com.bitesync.web.services.ArchiveService;
 import com.bitesync.web.services.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,9 +14,6 @@ public class EventMgrController {
 
     @Autowired
     private EventService eventService;
-
-    @Autowired
-    private ArchiveService archiveService;
 
     // CREATES A NEW EVENT WITH ENTERED DETAILS AND PASSES IT
     // TO THE DATABASE MANAGER TO SAVE INTO THE DATABASE.
@@ -165,26 +161,13 @@ public class EventMgrController {
             return new ResponseEntity<>("Invalid event ID.", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        event = eventService.getEvent(eventID);
-        if(event == null) {
-            System.out.println("EVENT NOT FOUND.");
-            return new ResponseEntity<>("Event not found.", HttpStatus.NOT_FOUND);
-        }
-
-        if(archiveService.archiveEvent(accountID, event) != null) {
+        if(eventService.archiveEvent(accountID, eventID)) {
             System.out.println("EVENT ARCHIVED: " + eventID);
-
-            if(eventService.removeEvent(accountID, eventID)) {
-                System.out.println("EVENT DELETED: " + eventID);
-                return new ResponseEntity<>("Event archived: " + eventID, HttpStatus.OK);
-            }
-
-            System.out.println("FAILED TO DELETE EVENT: " + eventID);
-            return new ResponseEntity<>("Failed to remove event: " + eventID, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Event archived: " + eventID, HttpStatus.OK);
         }
 
         System.out.println("FAILED TO ARCHIVE EVENT: " + eventID);
-        return new ResponseEntity<>("Failed to archive event: " + eventID, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>("Failed to archive event: " + eventID, HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping("/unarchive")
@@ -207,25 +190,12 @@ public class EventMgrController {
             return new ResponseEntity<>("Invalid event ID.", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        Event archivedEvent = archiveService.getArchivedEvent(eventID);
-        if(archivedEvent == null) {
-            System.out.println("EVENT NOT FOUND.");
-            return new ResponseEntity<>("Archived event not found: " + eventID, HttpStatus.NOT_FOUND);
-        }
-
-        if(archiveService.unarchiveEvent(accountID, eventID)) {
+        if(eventService.unarchiveEvent(accountID, eventID)) {
             System.out.println("EVENT UNARCHIVED: " + eventID);
-
-            if(eventService.addEvent(archivedEvent) != null) {
-                System.out.println("EVENT SAVED: " + eventID);
-                return new ResponseEntity<>("Event unarchived: " + eventID, HttpStatus.OK);
-            }
-
-            System.out.println("FAILED TO SAVE EVENT: " + eventID);
-            return new ResponseEntity<>("Failed to create event: " + eventID, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Event unarchived: " + eventID, HttpStatus.OK);
         }
 
         System.out.println("FAILED TO UNARCHIVE EVENT: " + eventID);
-        return new ResponseEntity<>("Failed to unarchive event: " + eventID, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>("Failed to unarchive event: " + eventID, HttpStatus.BAD_REQUEST);
     }
 }

@@ -1,12 +1,10 @@
 package com.bitesync.web.services;
 
 import com.bitesync.web.models.Event;
-import com.bitesync.web.repositories.ArchivedEventRepository;
 import com.bitesync.web.repositories.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -14,9 +12,6 @@ public class EventService {
 
     @Autowired
     private EventRepository events;
-
-    @Autowired
-    private ArchivedEventRepository archivedEvents;
 
     public Event addEvent(Event event) {
         return events.save(event);
@@ -55,6 +50,10 @@ public class EventService {
 
     public List<Event> getAll() {
         return events.findAll();
+    }
+
+    public List<Event> getAll(boolean archived) {
+        return events.findAllByArchived(archived);
     }
 
     public Event updateParticipant(String eventId, List<String> participant) {
@@ -110,5 +109,29 @@ public class EventService {
         }
 
         return null;
+    }
+
+    public boolean archiveEvent(String accountID, String eventID) {
+        Event auth = this.getEvent(eventID);
+        if(auth == null || auth.getArchive())
+            return false;
+        if(auth.getAccountID().equals(accountID) || accountID.equals("ADMIN")) {
+            auth.setArchive();
+            events.save(auth);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean unarchiveEvent(String accountID, String eventID) {
+        Event auth = this.getEvent(eventID);
+        if(auth == null || !auth.getArchive())
+            return false;
+        if(auth.getAccountID().equals(accountID) || accountID.equals("ADMIN")) {
+            auth.setArchive();
+            events.save(auth);
+            return true;
+        }
+        return false;
     }
 }

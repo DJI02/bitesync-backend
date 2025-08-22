@@ -15,9 +15,9 @@ public class SecurityService {
         Key key;
 
         if(admin)
-            key = security.findById("ADMIN").orElse(null);
+            key = security.findByRole("ADMIN");
         else
-            key = security.findById("USER").orElse(null);
+            key = security.findByRole("USER");
 
         if(key != null)
             return key.getKey();
