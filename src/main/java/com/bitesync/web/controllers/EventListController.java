@@ -75,8 +75,17 @@ public class EventListController {
             System.out.println("EVENT NOT FOUND: " + eventID);
             return new ResponseEntity<>("Event not found: " + eventID, HttpStatus.NOT_FOUND);
         }
+        System.out.println("EVENT PARTICIPANTS SAVED: " + eventID);
 
-        System.out.println("EVENT SAVED: " + eventID);
+        String accountID = participant.get(0);
+        event = eventService.addTags(eventID, accountService.getAccountInfo(accountID).getTags());
+
+        if(event == null) {
+            System.out.println("FAILED TO SAVE TAGS: " + accountID);
+            return new ResponseEntity<>("Failed to update tags: " + accountID, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        System.out.println("EVENT TAGS SAVED: " + accountID);
         return new ResponseEntity<>("Event updated: " + eventID, HttpStatus.OK);
     }
 
@@ -103,11 +112,18 @@ public class EventListController {
         Event event = eventService.removeParticipant(eventID, accountID);
 
         if(event == null) {
-            System.out.println("Failed to save event: " + eventID);
-            return new ResponseEntity<>("Failed to update event: " + eventID, HttpStatus.NOT_FOUND);
+            System.out.println("FAILED TO SAVE PARTICIPANTS: " + eventID);
+            return new ResponseEntity<>("Failed to update participants: " + eventID, HttpStatus.NOT_FOUND);
+        }
+        System.out.println("EVENT PARTICIPANTS SAVED: " + eventID);
+
+        event = eventService.removeTags(eventID, accountService.getAccountInfo(accountID).getTags());
+        if(event == null) {
+            System.out.println("FAILED TO SAVE TAGS: " + accountID);
+            return new ResponseEntity<>("Failed to update participants: " + accountID, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        System.out.println("EVENT SAVED: " + eventID);
+        System.out.println("EVENT TAGS SAVED: " + accountID);
         return new ResponseEntity<>("Event updated: " + eventID, HttpStatus.OK);
     }
 

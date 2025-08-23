@@ -111,6 +111,22 @@ public class EventService {
         return null;
     }
 
+    public Event addTags(String eventID, List<String> tags) {
+        Event event = events.findById(eventID).orElse(null);
+        if(event == null)
+            return null;
+        event.updateTags(true, tags);
+        return events.save(event);
+    }
+
+    public Event removeTags(String eventID, List<String> tags) {
+        Event event = events.findById(eventID).orElse(null);
+        if(event == null)
+            return null;
+        event.updateTags(false, tags);
+        return events.save(event);
+    }
+
     public boolean archiveEvent(String accountID, String eventID) {
         Event auth = this.getEvent(eventID);
         if(auth == null || auth.getArchive())

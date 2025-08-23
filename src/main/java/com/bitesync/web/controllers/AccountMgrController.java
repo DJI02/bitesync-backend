@@ -1,7 +1,9 @@
 package com.bitesync.web.controllers;
 
 import com.bitesync.web.models.Account;
+import com.bitesync.web.models.Event;
 import com.bitesync.web.services.AccountService;
+import com.bitesync.web.services.EventService;
 import com.bitesync.web.services.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,9 @@ public class AccountMgrController {
 
     @Autowired
     private RecipeService recipeService;
+
+    @Autowired
+    private EventService eventService;
 
     // SERVE ACCOUNT'S NON-SENSITIVE INFORMATION.
     // (DOES NOT SERVE PASSWORD OR SECURITY ANSWERS)
@@ -176,6 +181,20 @@ public class AccountMgrController {
             System.out.println("INVALID TARGET ID.");
             return new ResponseEntity<>("Invalid account ID.", HttpStatus.NOT_ACCEPTABLE);
         }
+
+        /*
+        Account account = accountService.getAccountInfo(targetID);
+        if(account == null) {
+            System.out.println("ACCOUNT NOT FOUND: " + targetID);
+            return new ResponseEntity<>("Account not found: " + targetID, HttpStatus.NOT_FOUND);
+        }
+
+        List<Event> allEvents = eventService.getAll();
+        for(Event event : allEvents) {
+            if(eventService.removeParticipant(event.getId(), targetID) != null)
+                eventService.removeTags(targetID, account.getTags());
+        }
+         */
 
         if(accountService.removeAccount(callerID, targetID)) {
             System.out.println("ACCOUNT DELETED: " + targetID);

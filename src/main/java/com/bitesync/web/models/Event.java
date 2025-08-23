@@ -2,6 +2,7 @@ package com.bitesync.web.models;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
+import org.springframework.data.util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,7 @@ public class Event {
     private String dateAndTime;
     private String description;
     private List<List<String>> participants;
+    private List<Pair<String, Integer>> tags;
     boolean archived;
 
     public Event(String accountID, String author, String name, String dateAndTime, String description) {
@@ -28,6 +30,7 @@ public class Event {
         this.dateAndTime = dateAndTime;
         this.description = description;
         this.participants = new ArrayList<>();
+        this.tags = new ArrayList<>();
         archived = false;
     }
 
@@ -81,6 +84,43 @@ public class Event {
 
     public void setParticipants(List<List<String>> participants) {
         this.participants = participants;
+    }
+
+    public List<Pair<String, Integer>> getTags() {
+        if(this.tags == null)
+            this.tags = new ArrayList<>();
+        return tags;
+    }
+
+    public void updateTags(boolean increment, List<String> tags) {
+        if(this.tags == null)
+            this.tags = new ArrayList<>();
+
+        // CYCLE THROUGH ALL PASSED TAGS.
+        for(String tag : tags) {
+            // TRACK INDEX.
+            int i = 0;
+
+            // IF THE EVENT ALREADY CONTAINS THE TAG, UPDATE ITS QUANTITY.
+            for(Pair<String, Integer> pair : this.tags) {
+                if(pair.getFirst().equals(tag)) {
+                    this.tags.remove(i);
+
+                    // READ INCREMENT OR DECREMENT FLAG.
+                    if(increment)
+                        this.tags.add(i, Pair.of(tag, pair.getSecond() + 1));
+                    else {
+                        if(pair.getSecond() - 1 > 0)
+                            this.tags.add(i, Pair.of(tag, pair.getSecond() + 1));
+                    }
+                }
+                i++;
+            }
+
+            // OTHERWISE, ADD THE NEW TAG TO THE EVENT WITH A QUANTITY OF 1.
+            if(increment)
+                this.tags.add(Pair.of(tag, 1));
+        }
     }
 
     public boolean getArchive() {
