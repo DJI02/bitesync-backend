@@ -21,7 +21,7 @@ public class Account {
     private List<String> tags;
     private List<String> recipes;
 
-    private Image image;
+    //private Image image;
 
     public Account(String username, String password, List<Integer> secQ, List<String> secA) {
         super();
@@ -118,6 +118,7 @@ public class Account {
         return recipes.remove(recipeID);
     }
 
+    /*
     public Image getImage() {
         return image;
     }
@@ -130,4 +131,6 @@ public class Account {
             return false;
         }
     }
+
+     */
 }

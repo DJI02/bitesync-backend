@@ -22,7 +22,7 @@ public class Event {
     private List<List<String>> participants;
     private List<Pair<String, Integer>> tags;
 
-    private Image image;
+    //private Image image;
 
     private boolean archived;
 
@@ -140,6 +140,7 @@ public class Event {
         this.archived = archived;
     }
 
+    /*
     public Image getImage() {
         return image;
     }
@@ -152,4 +153,6 @@ public class Event {
             return false;
         }
     }
+
+     */
 }

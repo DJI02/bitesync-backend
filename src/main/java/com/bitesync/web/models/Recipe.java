@@ -18,7 +18,7 @@ public class Recipe {
     private String instructions;
     private List<String> tags;
 
-    private Image image;
+    //private Image image;
 
     public Recipe(String accountID, String author, String name, String ingredients, String instructions, List<String> tags) {
         super();
@@ -82,6 +82,7 @@ public class Recipe {
         this.tags = tags;
     }
 
+    /*
     public Image getImage() {
         return image;
     }
@@ -94,4 +95,6 @@ public class Recipe {
             return false;
         }
     }
+
+     */
 }
