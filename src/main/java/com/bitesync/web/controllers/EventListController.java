@@ -1,10 +1,12 @@
 package com.bitesync.web.controllers;
 
 import com.bitesync.web.models.Event;
+import com.bitesync.web.models.Image;
 import com.bitesync.web.services.AccountService;
 import com.bitesync.web.services.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -132,4 +134,41 @@ public class EventListController {
         System.out.println("LOADING ALL ARCHIVED EVENTS.");
         return new ResponseEntity<>(eventService.getAll(true), HttpStatus.FOUND);
     }
+
+    /*
+    @GetMapping("/view-image")
+    public ResponseEntity<byte[]> viewImage(@RequestParam String eventID) {
+        if(eventID == null || eventID.isEmpty()) {
+            System.out.println("INVALID EVENT ID.");
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        Event event = eventService.getEvent(eventID);
+
+        if(event == null) {
+            System.out.println("EVENT NOT FOUND.");
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        Image image = event.getImage();
+
+        if(image == null) {
+            System.out.println("IMAGE NOT FOUND.");
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        String type = image.type();
+        byte[] data = image.data();
+
+        if(type == null || type.isEmpty() || data == null) {
+            System.out.println("FAILED TO LOAD IMAGE FILE.");
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        System.out.println("LOADING IMAGE.");
+        return ResponseEntity.ok()
+                .contentType(MediaType.valueOf(type))
+                .body(data);
+    }
+     */
 }

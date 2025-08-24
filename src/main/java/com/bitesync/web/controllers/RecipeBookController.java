@@ -1,11 +1,13 @@
 package com.bitesync.web.controllers;
 
 import com.bitesync.web.models.Account;
+import com.bitesync.web.models.Image;
 import com.bitesync.web.models.Recipe;
 import com.bitesync.web.services.AccountService;
 import com.bitesync.web.services.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -153,4 +155,41 @@ public class RecipeBookController {
         System.out.println("RECIPE REMOVED.");
         return new ResponseEntity<>("Account updated: " + accountID, HttpStatus.OK);
     }
+
+    /*
+    @GetMapping("/view-image")
+    public ResponseEntity<byte[]> viewImage(@RequestParam String recipeID) {
+        if(recipeID == null || recipeID.isEmpty()) {
+            System.out.println("INVALID RECIPE ID.");
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        Recipe recipe = recipeService.getRecipe(recipeID);
+
+        if(recipe == null) {
+            System.out.println("RECIPE NOT FOUND.");
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        Image image = recipe.getImage();
+
+        if(image == null) {
+            System.out.println("IMAGE NOT FOUND.");
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        String type = image.type();
+        byte[] data = image.data();
+
+        if(type == null || type.isEmpty() || data == null) {
+            System.out.println("FAILED TO LOAD IMAGE FILE.");
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        System.out.println("LOADING IMAGE.");
+        return ResponseEntity.ok()
+                .contentType(MediaType.valueOf(type))
+                .body(data);
+    }
+     */
 }

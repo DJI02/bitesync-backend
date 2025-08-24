@@ -53,7 +53,7 @@ public class LoginController {
         String key = account.getId();
 
         if(key == null || !key.equals(security.getKey(false))) {
-            if(key != null && !key.equals(security.getKey(true)))
+            if(key != null && key.equals(security.getKey(true)))
                 admin = true;
             else {
                 System.out.println("INVALID REGISTRATION KEY.");
@@ -99,7 +99,7 @@ public class LoginController {
         // IF ADMIN KEY IS ENTERED, SET ACCOUNT TO ADMINISTRATOR.
         account = new Account(username, password, securityQuestions, securityAnswers);
         if(admin)
-            account.setId("ADMIN");
+            account.setRole("ADMIN");
 
         // OTHERWISE, AN ACCOUNT IS SUCCESSFULLY CREATED.
         try {

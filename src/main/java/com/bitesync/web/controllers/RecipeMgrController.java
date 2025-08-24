@@ -1,11 +1,16 @@
 package com.bitesync.web.controllers;
 
+import com.bitesync.web.models.Account;
 import com.bitesync.web.models.Recipe;
+import com.bitesync.web.services.AccountService;
 import com.bitesync.web.services.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -14,7 +19,10 @@ import java.util.List;
 public class RecipeMgrController {
 
     @Autowired
-    private RecipeService service;
+    private AccountService accountService;
+
+    @Autowired
+    private RecipeService recipeService;
 
     // CREATES A NEW RECIPE WITH ENTERED DETAILS AND PASSES IT
     // TO THE DATABASE MANAGER TO SAVE INTO THE DATABASE.
@@ -64,7 +72,7 @@ public class RecipeMgrController {
             }
         }
 
-        String recipeID = service.addRecipe(recipe).getId();
+        String recipeID = recipeService.addRecipe(recipe).getId();
         if(recipeID == null || recipeID.isEmpty()){
             System.out.println("FAILED TO SAVE RECIPE.");
             return new ResponseEntity<>("Failed to create recipe.", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -126,7 +134,7 @@ public class RecipeMgrController {
             }
         }
 
-        if(service.updateRecipe(accountID, recipeID, recipe) == null) {
+        if(recipeService.updateRecipe(accountID, recipeID, recipe) == null) {
             System.out.println("FAILED TO SAVE RECIPE: " + recipeID);
             return new ResponseEntity<>("Failed to update recipe: " + recipeID, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -155,7 +163,13 @@ public class RecipeMgrController {
             return new ResponseEntity<>("Invalid recipe ID.", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        if(service.removeRecipe(accountID, recipeID)) {
+        Account account = accountService.getAccountInfo(accountID);
+        if(account == null) {
+            System.out.println("ACCOUNT NOT FOUND.");
+            return new ResponseEntity<>("Account not found.", HttpStatus.NOT_FOUND);
+        }
+
+        if(recipeService.removeRecipe(account, recipeID)) {
             System.out.println("RECIPE DELETED: " + recipeID);
             return new ResponseEntity<>("Recipe removed: " + recipeID, HttpStatus.OK);
         }
@@ -163,4 +177,30 @@ public class RecipeMgrController {
         System.out.println("FAILED TO DELETE RECIPE: " + recipeID);
         return new ResponseEntity<>("Failed to delete recipe: " + recipeID, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    /*
+    @PostMapping("/change-image")
+    public ResponseEntity<String> editImage(@RequestPart String recipeID, @RequestPart MultipartFile imageFile) throws IOException {
+
+        if(recipeID == null || recipeID.isEmpty()) {
+            System.out.println("INVALID RECIPE ID.");
+            return new ResponseEntity<>("Invalid recipe ID.", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        if(imageFile == null) {
+            System.out.println("INVALID IMAGE FILE.");
+            return new ResponseEntity<>("Invalid image file: " + recipeID, HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        Recipe recipe = recipeService.updateImage(recipeID, imageFile);
+
+        if(recipe == null) {
+            System.out.println("FAILED TO SAVE IMAGE.");
+            return new ResponseEntity<>("Failed to update image:" + recipeID, HttpStatus.BAD_REQUEST);
+        }
+
+        System.out.println("IMAGE SAVED.");
+        return new ResponseEntity<>("Image updated: " + recipeID, HttpStatus.OK);
+    }
+     */
 }

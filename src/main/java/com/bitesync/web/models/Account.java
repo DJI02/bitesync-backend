@@ -14,15 +14,20 @@ public class Account {
 
     private String username;
     private String password;
+    private String role;
+
     private List<Integer> secQ;
     private List<String> secA;
     private List<String> tags;
     private List<String> recipes;
 
+    private Image image;
+
     public Account(String username, String password, List<Integer> secQ, List<String> secA) {
         super();
         this.username = username;
         this.password = password;
+        this.role = "USER";
         this.secQ = secQ;
         this.secA = secA;
         this.tags = new ArrayList<>();
@@ -63,6 +68,16 @@ public class Account {
         this.password = password;
     }
 
+    public String getRole() {
+        if(role == null)
+            role = "USER";
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     public List<Integer> getSecQ() {
         return secQ;
     }
@@ -101,5 +116,18 @@ public class Account {
 
     public boolean removeRecipe(String recipeID) {
         return recipes.remove(recipeID);
+    }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public boolean setImage(String name, String type, byte[] data) {
+        try {
+            image = new Image(name, type, data);
+            return true;
+        } catch (RuntimeException e) {
+            return false;
+        }
     }
 }

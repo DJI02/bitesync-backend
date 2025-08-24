@@ -1,16 +1,24 @@
 package com.bitesync.web.controllers;
 
+import com.bitesync.web.models.Account;
 import com.bitesync.web.models.Event;
+import com.bitesync.web.services.AccountService;
 import com.bitesync.web.services.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @CrossOrigin
 @RequestMapping(value = "/event-mgr", produces = "application/json")
 public class EventMgrController {
+
+    @Autowired
+    private AccountService accountService;
 
     @Autowired
     private EventService eventService;
@@ -132,7 +140,13 @@ public class EventMgrController {
             return new ResponseEntity<>("Invalid event ID.", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        if(eventService.removeEvent(accountID, eventID)) {
+        Account account = accountService.getAccountInfo(accountID);
+        if(account == null) {
+            System.out.println("ACCOUNT NOT FOUND.");
+            return new ResponseEntity<>("Account not found.", HttpStatus.NOT_FOUND);
+        }
+
+        if(eventService.removeEvent(account, eventID)) {
             System.out.println("EVENT DELETED: " + eventID);
             return new ResponseEntity<>("Event removed: " + eventID, HttpStatus.OK);
         }
@@ -161,7 +175,13 @@ public class EventMgrController {
             return new ResponseEntity<>("Invalid event ID.", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        if(eventService.archiveEvent(accountID, eventID)) {
+        Account account = accountService.getAccountInfo(accountID);
+        if(account == null) {
+            System.out.println("ACCOUNT NOT FOUND.");
+            return new ResponseEntity<>("Account not found.", HttpStatus.NOT_FOUND);
+        }
+
+        if(eventService.archiveEvent(account, eventID)) {
             System.out.println("EVENT ARCHIVED: " + eventID);
             return new ResponseEntity<>("Event archived: " + eventID, HttpStatus.OK);
         }
@@ -190,7 +210,13 @@ public class EventMgrController {
             return new ResponseEntity<>("Invalid event ID.", HttpStatus.NOT_ACCEPTABLE);
         }
 
-        if(eventService.unarchiveEvent(accountID, eventID)) {
+        Account account = accountService.getAccountInfo(accountID);
+        if(account == null) {
+            System.out.println("ACCOUNT NOT FOUND.");
+            return new ResponseEntity<>("Account not found.", HttpStatus.NOT_FOUND);
+        }
+
+        if(eventService.unarchiveEvent(account, eventID)) {
             System.out.println("EVENT UNARCHIVED: " + eventID);
             return new ResponseEntity<>("Event unarchived: " + eventID, HttpStatus.OK);
         }
@@ -198,4 +224,30 @@ public class EventMgrController {
         System.out.println("FAILED TO UNARCHIVE EVENT: " + eventID);
         return new ResponseEntity<>("Failed to unarchive event: " + eventID, HttpStatus.BAD_REQUEST);
     }
+
+    /*
+    @PostMapping("/change-image")
+    public ResponseEntity<String> editImage(@RequestPart String eventID, @RequestPart MultipartFile imageFile) throws IOException {
+
+        if(eventID == null || eventID.isEmpty()) {
+            System.out.println("INVALID EVENT ID.");
+            return new ResponseEntity<>("Invalid event ID,", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        if(imageFile == null) {
+            System.out.println("INVALID IMAGE FILE.");
+            return new ResponseEntity<>("Invalid image file: " + eventID, HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        Event event = eventService.updateImage(eventID, imageFile);
+
+        if(event == null) {
+            System.out.println("FAILED TO SAVE IMAGE.");
+            return new ResponseEntity<>("Failed to update image:" + eventID, HttpStatus.BAD_REQUEST);
+        }
+
+        System.out.println("IMAGE SAVED.");
+        return new ResponseEntity<>("Image updated: " + eventID, HttpStatus.OK);
+    }
+     */
 }

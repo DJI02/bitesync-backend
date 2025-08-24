@@ -1,10 +1,13 @@
 package com.bitesync.web.services;
 
+import com.bitesync.web.models.Account;
 import com.bitesync.web.models.Event;
 import com.bitesync.web.repositories.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -28,7 +31,7 @@ public class EventService {
         return null;
     }
 
-    public boolean removeEvent(String accountID, String eventID) {
+    public boolean removeEvent(Account account, String eventID) {
 
         // SEARCH ACTIVE EVENTS.
         Event auth = events.findById(eventID).orElse(null);
@@ -37,7 +40,7 @@ public class EventService {
         }
 
         // VERIFY USER AUTHORIZATION.
-        if(auth.getAccountID().equals(accountID) || accountID.equals("ADMIN")) {
+        if(auth.getAccountID().equals(account.getId()) || account.getRole().equals("ADMIN")) {
             events.deleteById(eventID);
             return true;
         }
@@ -127,11 +130,11 @@ public class EventService {
         return events.save(event);
     }
 
-    public boolean archiveEvent(String accountID, String eventID) {
+    public boolean archiveEvent(Account account, String eventID) {
         Event auth = this.getEvent(eventID);
         if(auth == null || auth.getArchive())
             return false;
-        if(auth.getAccountID().equals(accountID) || accountID.equals("ADMIN")) {
+        if(auth.getAccountID().equals(account.getId()) || account.getRole().equals("ADMIN")) {
             auth.setArchive();
             events.save(auth);
             return true;
@@ -139,15 +142,32 @@ public class EventService {
         return false;
     }
 
-    public boolean unarchiveEvent(String accountID, String eventID) {
+    public boolean unarchiveEvent(Account account, String eventID) {
         Event auth = this.getEvent(eventID);
         if(auth == null || !auth.getArchive())
             return false;
-        if(auth.getAccountID().equals(accountID) || accountID.equals("ADMIN")) {
+        if(auth.getAccountID().equals(account.getId()) || account.getRole().equals("ADMIN")) {
             auth.setArchive();
             events.save(auth);
             return true;
         }
         return false;
     }
+
+    /*
+    public Event updateImage(String accountID, MultipartFile imageFile) throws IOException {
+        Event event = events.findById(accountID).orElse(null);
+        if(event == null)
+            return null;
+
+        String name = imageFile.getOriginalFilename();
+        String type = imageFile.getContentType();
+        byte[] data = imageFile.getBytes();
+
+        if(event.setImage(name, type, data))
+            return events.save(event);
+        return null;
+    }
+
+     */
 }

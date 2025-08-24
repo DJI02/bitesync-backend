@@ -12,15 +12,20 @@ public class Event {
 
     @MongoId
     private String eventID;
-
     private final String accountID;
+
     private String author;
     private String name;
     private String dateAndTime;
     private String description;
+
     private List<List<String>> participants;
     private List<Pair<String, Integer>> tags;
-    boolean archived;
+
+    private Image image;
+
+    private boolean archived;
+
 
     public Event(String accountID, String author, String name, String dateAndTime, String description) {
         super();
@@ -133,5 +138,18 @@ public class Event {
 
     public void setArchive(boolean archived) {
         this.archived = archived;
+    }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public boolean setImage(String name, String type, byte[] data) {
+        try {
+            image = new Image(name, type, data);
+            return true;
+        } catch (RuntimeException e) {
+            return false;
+        }
     }
 }

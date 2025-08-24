@@ -10,13 +10,15 @@ public class Recipe {
 
     @MongoId
     private String recipeID;
-
     private final String accountID;
+
     private String author;
     private String name;
     private String ingredients;
     private String instructions;
     private List<String> tags;
+
+    private Image image;
 
     public Recipe(String accountID, String author, String name, String ingredients, String instructions, List<String> tags) {
         super();
@@ -78,5 +80,18 @@ public class Recipe {
 
     public void setTags(List<String> tags) {
         this.tags = tags;
+    }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public boolean setImage(String name, String type, byte[] data) {
+        try {
+            image = new Image(name, type, data);
+            return true;
+        } catch (RuntimeException e) {
+            return false;
+        }
     }
 }

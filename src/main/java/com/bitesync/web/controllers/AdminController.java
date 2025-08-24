@@ -32,8 +32,14 @@ public class AdminController {
 
     // SERVE ALL EXISTING ACCOUNTS.
     @PostMapping("/accounts")
-    public ResponseEntity<List<Account>> viewAccounts(@RequestParam String id) {
-        if(id.equals("ADMIN")) {
+    public ResponseEntity<List<Account>> viewAccounts(@RequestParam String accountID) {
+        Account account = accountService.getAccountInfo(accountID);
+        if(account == null) {
+            System.out.println("ACCOUNT NOT FOUND.");
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        if(account.getRole().equals("ADMIN")) {
             System.out.println("LOADING ALL ACCOUNTS.");
             return new ResponseEntity<>(accountService.getAll(), HttpStatus.OK);
         }
@@ -48,8 +54,14 @@ public class AdminController {
         String role = entry.get(1);
         String key = entry.get(2);
 
+        Account account = accountService.getAccountInfo(id);
+        if(account == null) {
+            System.out.println("ACCOUNT NOT FOUND.");
+            return new ResponseEntity<>("Account not found.", HttpStatus.NOT_FOUND);
+        }
+
         // VERIFY ADMINISTRATOR.
-        if(id != null && id.equals("ADMIN")) {
+        if(account.getRole() != null && account.getRole().equals("ADMIN")) {
             System.out.println("ACCESS GRANTED.");
 
             // VERIFY VALIDITY OF NEW KEY VALUE.
@@ -57,13 +69,13 @@ public class AdminController {
 
                 // UPDATE KEY OF CORRESPONDING ROLE.
                 if(role.equals("ADMIN")) {
-                    if(!securityService.setKey(new Key(true, key))) {
+                    if(!securityService.setKey(new Key(role, key))) {
                         System.out.println("FAILED TO SAVE KEY: " + key);
                         return new ResponseEntity<>("Failed to update key: " + key, HttpStatus.INTERNAL_SERVER_ERROR);
                     }
                 }
                 else if(role.equals("USER")) {
-                    if(!securityService.setKey(new Key(false, key))) {
+                    if(!securityService.setKey(new Key(role, key))) {
                         System.out.println("FAILED TO SAVE KEY: " + key);
                         return new ResponseEntity<>("Failed to update key: " + key, HttpStatus.INTERNAL_SERVER_ERROR);
                     }

@@ -1,12 +1,13 @@
 package com.bitesync.web.services;
 
 import com.bitesync.web.models.Account;
-import com.bitesync.web.models.Event;
 import com.bitesync.web.repositories.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +27,10 @@ public class AccountService {
     }
 
     public boolean removeAccount(String callerID, String deleteID) {
-        if(callerID.equals(deleteID) || callerID.equals("ADMIN")) {
+        Account account = accounts.findById(callerID).orElse(null);
+        if(account == null)
+            return false;
+        if(callerID.equals(deleteID) || account.getRole().equals("ADMIN")) {
             accounts.deleteById(deleteID);
             return true;
         }
@@ -47,6 +51,7 @@ public class AccountService {
         Account info = new Account(account.getUsername(), null, account.getSecQ(), null);
         info.setTags(account.getTags());
         info.setRecipes(account.getRecipes());
+        info.setRole(account.getRole());
         return info;
     }
 
@@ -106,4 +111,24 @@ public class AccountService {
             return null;
         return accounts.save(account);
     }
+
+    /*
+    public Account updateImage(String accountID, MultipartFile imageFile) throws IOException {
+        Account account = accounts.findById(accountID).orElse(null);
+        if(account == null)
+            return null;
+
+        String name = imageFile.getOriginalFilename();
+        String type = imageFile.getContentType();
+        byte[] data = imageFile.getBytes();
+
+        if(name == null || type == null || type.isEmpty() || data == null)
+            return null;
+
+        if(account.setImage(name, type, data))
+            return accounts.save(account);
+        return null;
+    }
+
+     */
 }

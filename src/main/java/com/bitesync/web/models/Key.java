@@ -9,11 +9,8 @@ public class Key {
     private final String role;
     private String key;
 
-    public Key(Boolean admin, String key) {
-        if(admin)
-            role = "ADMIN";
-        else
-            role = "USER";
+    public Key(String role, String key) {
+        this.role = role;
         this.key = key;
     }
 

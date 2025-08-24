@@ -1,15 +1,18 @@
 package com.bitesync.web.controllers;
 
 import com.bitesync.web.models.Account;
-import com.bitesync.web.models.Event;
+import com.bitesync.web.models.Image;
 import com.bitesync.web.services.AccountService;
 import com.bitesync.web.services.EventService;
 import com.bitesync.web.services.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -204,4 +207,64 @@ public class AccountMgrController {
         System.out.println("FAILED TO DELETE ACCOUNT: " + targetID);
         return new ResponseEntity<>("Failed to remove account: " + targetID, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+/*
+    @GetMapping("/view-image")
+    public ResponseEntity<byte[]> viewImage(@RequestParam String accountID) {
+        if(accountID == null || accountID.isEmpty()) {
+            System.out.println("INVALID ACCOUNT ID.");
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        Account account = accountService.getAccountInfo(accountID);
+
+        if(account == null) {
+            System.out.println("ACCOUNT NOT FOUND.");
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        Image image = account.getImage();
+
+        if(image == null) {
+            System.out.println("IMAGE NOT FOUND.");
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        String type = image.type();
+        byte[] data = image.data();
+
+        if(type == null || type.isEmpty() || data == null) {
+            System.out.println("FAILED TO LOAD IMAGE.");
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        System.out.println("LOADING IMAGE.");
+        return ResponseEntity.ok()
+                .contentType(MediaType.valueOf(type))
+                .body(data);
+    }
+
+    @PostMapping("/change-image")
+    public ResponseEntity<String> editImage(@RequestPart String accountID, @RequestPart MultipartFile imageFile) throws IOException {
+
+        if(accountID == null || accountID.isEmpty()) {
+            System.out.println("INVALID ACCOUNT ID.");
+            return new ResponseEntity<>("Invalid account ID.", HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        if(imageFile == null) {
+            System.out.println("INVALID IMAGE FILE.");
+            return new ResponseEntity<>("Invalid image file: " + accountID, HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        Account account = accountService.updateImage(accountID, imageFile);
+
+        if(account == null) {
+            System.out.println("FAILED TO SAVE IMAGE.");
+            return new ResponseEntity<>("Failed to update image:" + accountID, HttpStatus.BAD_REQUEST);
+        }
+
+        System.out.println("IMAGE SAVED.");
+        return new ResponseEntity<>("Image updated: " + accountID, HttpStatus.OK);
+    }
+    */
 }
