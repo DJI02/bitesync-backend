@@ -49,6 +49,7 @@ public class AccountService {
 
         // COPY NON-SENSITIVE INFO TO SECONDARY ACCOUNT OBJECT
         Account info = new Account(account.getUsername(), null, account.getSecQ(), null);
+        info.setId(account.getId());
         info.setTags(account.getTags());
         info.setRecipes(account.getRecipes());
         info.setRole(account.getRole());
