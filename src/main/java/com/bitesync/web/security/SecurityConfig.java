@@ -34,7 +34,7 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource())) //Configures CORS to allow cross-origin requests
             .csrf(csrf -> csrf.disable()) //Disables CSRF protection (common for token-based auth)
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/register", "/login", "/change-password", "/account-mgr/password").permitAll()
+                .requestMatchers("/register", "/login", "/change-password", "/account-mgr/password", "/admin/init").permitAll()
                 .anyRequest().authenticated() //Defines which endpoints are public ( /register , /login ) and which require authentication
             )
             //- Sets session management to STATELESS (crucial for JWT as it's a stateless authentication method)

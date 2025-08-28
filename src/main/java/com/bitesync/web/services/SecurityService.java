@@ -25,7 +25,15 @@ public class SecurityService {
     }
 
     public boolean setKey(Key key) {
+        if(key == null || security.findByRole(key.getRole()) == null)
+            return false;
+        key.setId(security.findByRole(key.getRole()).getId());
         Key check = security.save(key);
         return check.getKey().equals(key.getKey());
+    }
+
+    public String initializeKey(Key key) {
+        security.save(key);
+        return key.getRole() + ": " + key.getKey();
     }
 }
