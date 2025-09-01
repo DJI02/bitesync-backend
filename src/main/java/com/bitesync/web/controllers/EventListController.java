@@ -27,7 +27,7 @@ public class EventListController {
     @GetMapping("/all")
     public ResponseEntity<List<Event>> viewEvents() {
         System.out.println("LOADING ALL EVENTS.");
-        return new ResponseEntity<>(eventService.getAll(false), HttpStatus.FOUND);
+        return new ResponseEntity<>(eventService.getAll(false), HttpStatus.OK);
     }
 
     // SERVE A SPECIFIC EVENT BY ID.
@@ -140,7 +140,7 @@ public class EventListController {
     @GetMapping("/archive")
     public ResponseEntity<List<Event>> viewArchive() {
         System.out.println("LOADING ALL ARCHIVED EVENTS.");
-        return new ResponseEntity<>(eventService.getAll(true), HttpStatus.FOUND);
+        return new ResponseEntity<>(eventService.getAll(true), HttpStatus.OK);
     }
 
     /*
