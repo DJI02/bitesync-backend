@@ -113,25 +113,28 @@ public class Event {
             // TRACK INDEX.
             int i = 0;
 
-            // IF THE EVENT ALREADY CONTAINS THE TAG, UPDATE ITS QUANTITY.
-            for(Pair<String, Integer> pair : this.tags) {
-                if(pair.getFirst().equals(tag)) {
-                    this.tags.remove(i);
+            if(tag != null) {
+                // IF THE EVENT ALREADY CONTAINS THE TAG, UPDATE ITS QUANTITY.
+                for (Pair<String, Integer> pair : this.tags) {
+                    if(pair != null) {
+                        if (pair.getFirst().equals(tag)) {
+                            this.tags.remove(i);
 
-                    // READ INCREMENT OR DECREMENT FLAG.
-                    if(increment)
-                        this.tags.add(Pair.of(tag, pair.getSecond() + 1));
-                    else {
-                        if(pair.getSecond() - 1 > 0)
-                            this.tags.add(Pair.of(tag, pair.getSecond() + 1));
+                            // READ INCREMENT OR DECREMENT FLAG.
+                            if (increment)
+                                this.tags.add(Pair.of(tag, pair.getSecond() + 1));
+                            else {
+                                if (pair.getSecond() - 1 > 0)
+                                    this.tags.add(Pair.of(tag, pair.getSecond() + 1));
+                            }
+                        }
                     }
+                    i++;
                 }
-                i++;
+                // OTHERWISE, ADD THE NEW TAG TO THE EVENT WITH A QUANTITY OF 1.
+                if(increment)
+                    this.tags.add(Pair.of(tag, 1));
             }
-
-            // OTHERWISE, ADD THE NEW TAG TO THE EVENT WITH A QUANTITY OF 1.
-            if(increment)
-                this.tags.add(Pair.of(tag, 1));
         }
     }
 

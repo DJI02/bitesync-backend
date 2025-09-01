@@ -77,8 +77,11 @@ public class EventListController {
             System.out.println("EVENT NOT FOUND: " + eventID);
             return new ResponseEntity<>("Event not found: " + eventID, HttpStatus.NOT_FOUND);
         }
-        System.out.println("EVENT PARTICIPANTS SAVED: " + eventID);
 
+        System.out.println("EVENT PARTICIPANTS SAVED: " + eventID);
+        return new ResponseEntity<>("Event updated: " + eventID, HttpStatus.OK);
+
+        /*
         String accountID = participant.get(0);
         event = eventService.addTags(eventID, accountService.getAccountInfo(accountID).getTags());
 
@@ -89,6 +92,7 @@ public class EventListController {
 
         System.out.println("EVENT TAGS SAVED: " + accountID);
         return new ResponseEntity<>("Event updated: " + eventID, HttpStatus.OK);
+         */
     }
 
     @DeleteMapping("/leave")
@@ -117,8 +121,11 @@ public class EventListController {
             System.out.println("FAILED TO SAVE PARTICIPANTS: " + eventID);
             return new ResponseEntity<>("Failed to update participants: " + eventID, HttpStatus.NOT_FOUND);
         }
-        System.out.println("EVENT PARTICIPANTS SAVED: " + eventID);
 
+        System.out.println("EVENT PARTICIPANTS SAVED: " + eventID);
+        return new ResponseEntity<>("Event updated: " + eventID, HttpStatus.OK);
+
+        /*
         event = eventService.removeTags(eventID, accountService.getAccountInfo(accountID).getTags());
         if(event == null) {
             System.out.println("FAILED TO SAVE TAGS: " + accountID);
@@ -127,6 +134,7 @@ public class EventListController {
 
         System.out.println("EVENT TAGS SAVED: " + accountID);
         return new ResponseEntity<>("Event updated: " + eventID, HttpStatus.OK);
+         */
     }
 
     @GetMapping("/archive")
