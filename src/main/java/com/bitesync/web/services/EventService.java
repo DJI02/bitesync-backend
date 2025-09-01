@@ -26,6 +26,8 @@ public class EventService {
             return null;
         if(auth.getAccountID().equals(accountID)) {
             event.setId(eventID);
+            event.setParticipants(auth.getParticipants());
+            event.setTags(auth.getTags());
             return events.save(event);
         }
         return null;

@@ -97,7 +97,14 @@ public class Event {
         return tags;
     }
 
+    public void setTags(List<Pair<String, Integer>> tags) {
+        this.tags = tags;
+    }
+
     public void updateTags(boolean increment, List<String> tags) {
+        if(tags == null)
+            return;
+
         if(this.tags == null)
             this.tags = new ArrayList<>();
 
@@ -113,10 +120,10 @@ public class Event {
 
                     // READ INCREMENT OR DECREMENT FLAG.
                     if(increment)
-                        this.tags.add(i, Pair.of(tag, pair.getSecond() + 1));
+                        this.tags.add(Pair.of(tag, pair.getSecond() + 1));
                     else {
                         if(pair.getSecond() - 1 > 0)
-                            this.tags.add(i, Pair.of(tag, pair.getSecond() + 1));
+                            this.tags.add(Pair.of(tag, pair.getSecond() + 1));
                     }
                 }
                 i++;
