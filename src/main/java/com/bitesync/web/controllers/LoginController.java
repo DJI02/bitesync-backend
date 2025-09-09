@@ -56,7 +56,7 @@ public class LoginController {
             if(key != null && key.equals(security.getKey(true)))
                 admin = true;
             else {
-                System.out.println("INVALID REGISTRATION KEY.");
+                System.out.println("INVALID REGISTRATION KEY: " + key);
                 return new ResponseEntity<>("Invalid registration key.", HttpStatus.UNAUTHORIZED);
             }
         }
@@ -135,12 +135,12 @@ public class LoginController {
             response.put("token", jwt);
             response.put("userId", account.getId());
             
-            System.out.println("ACCESS GRANTED.");
+            System.out.println("ACCESS GRANTED: " + login.getUsername());
             return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
             
         } catch (BadCredentialsException e) {
-            System.out.println("ACCESS DENIED.");
-            return new ResponseEntity<>("Invalid Username or password.", HttpStatus.UNAUTHORIZED);
+            System.out.println("ACCESS DENIED: " + login.getUsername());
+            return new ResponseEntity<>("Invalid username or password.", HttpStatus.UNAUTHORIZED);
         }
     }
 
