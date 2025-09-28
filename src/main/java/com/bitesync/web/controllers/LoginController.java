@@ -166,4 +166,10 @@ public class LoginController {
         System.out.println("ACCOUNT FOUND.");
         return new ResponseEntity<>(secure, HttpStatus.OK);
     }
+
+    @GetMapping("/wakeup")
+    public ResponseEntity<String> wakeup() {
+        System.out.println("SERVER ACTIVE.");
+        return new ResponseEntity<>("Server active.", HttpStatus.OK);
+    }
 }
